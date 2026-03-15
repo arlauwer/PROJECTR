@@ -8,13 +8,19 @@
 #include <vector>
 #include <vulkan/vulkan_core.h>
 
-VulkanContext::VulkanContext() {
-
+VulkanContext::VulkanContext()
+{
+    // Mandatory construction
     createInstance();
     createLogicalDevice();
+
+    // Will require parameters
+    createDescriptors();
+    createPipeline();
 }
 
-void VulkanContext::createInstance() {
+void VulkanContext::createInstance()
+{
     VkApplicationInfo appInfo{};
     appInfo.sType      = VK_STRUCTURE_TYPE_APPLICATION_INFO;
     appInfo.apiVersion = VK_API_VERSION_1_3;
@@ -30,19 +36,24 @@ void VulkanContext::createInstance() {
     vkCreateInstance(&instanceInfo, nullptr, &_instance);
 }
 
-void VulkanContext::createLogicalDevice() {
+void VulkanContext::createLogicalDevice()
+{
 
     // for now we just use a single device, but in future we can have it look for
     // certain presets and the 1 device is the last preset if it can't find
     // anything else
 
     // --- Find physical device ---
-    uint32_t         deviceCount = 1;
-    VkPhysicalDevice physicalDevice;
-    VkResult         foundDevice = vkEnumeratePhysicalDevices(_instance, &deviceCount, &physicalDevice);
+    uint32_t deviceCount = 0;
+    vkEnumeratePhysicalDevices(_instance, &deviceCount, nullptr);
 
-    if (foundDevice != VK_SUCCESS)
+    if (deviceCount == 0)
         throw std::runtime_error("No Vulkan compatible physical device found!");
+
+    std::vector<VkPhysicalDevice> physicalDevices(deviceCount);
+    VkResult foundDevice = vkEnumeratePhysicalDevices(_instance, &deviceCount, physicalDevices.data());
+
+    VkPhysicalDevice physicalDevice = physicalDevices[0];
 
     // --- Find compute queue family ---
     uint32_t queueFamilyCount = 0;
@@ -51,8 +62,10 @@ void VulkanContext::createLogicalDevice() {
     vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &queueFamilyCount, queueFamilies.data());
 
     uint32_t computeQueueFamily = -1;
-    for (uint32_t i = 0; i < queueFamilyCount; i++) {
-        if (queueFamilies[i].queueFlags & VK_QUEUE_COMPUTE_BIT) {
+    for (uint32_t i = 0; i < queueFamilyCount; i++)
+    {
+        if (queueFamilies[i].queueFlags & VK_QUEUE_COMPUTE_BIT)
+        {
             computeQueueFamily = i;
             break;
         }
@@ -63,7 +76,7 @@ void VulkanContext::createLogicalDevice() {
     // --- Logical device ---
     float                   queuePriority = 1.0f;
     VkDeviceQueueCreateInfo queueInfo{};
-    queueInfo.sType            = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;  // what are these types for?
+    queueInfo.sType            = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO; // what are these types for?
     queueInfo.queueFamilyIndex = computeQueueFamily;
     queueInfo.queueCount       = 1;
     queueInfo.pQueuePriorities = &queuePriority;
@@ -78,17 +91,89 @@ void VulkanContext::createLogicalDevice() {
     vkGetDeviceQueue(_device, computeQueueFamily, 0, &_computeQueue);
 }
 
-void VulkanContext::createDescriptors() {
-	
+void VulkanContext::createDescriptors()
+{
+    // hard coded single DescriptorSet with 3 SSBO bindings
+
+    // --- Descriptor set layout ---
+    VkDescriptorSetLayoutBinding bindings[3]{};
+
+    // 3 storage buffers
+    for (int i = 0; i < 3; i++)
+    {
+        bindings[i].binding         = i;
+        bindings[i].descriptorType  = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+        bindings[i].descriptorCount = 1;
+        bindings[i].stageFlags      = VK_SHADER_STAGE_COMPUTE_BIT;
+    }
+
+    VkDescriptorSetLayoutCreateInfo layoutInfo{};
+    layoutInfo.sType        = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+    layoutInfo.bindingCount = 3;
+    layoutInfo.pBindings    = bindings;
+
+    vkCreateDescriptorSetLayout(_device, &layoutInfo, nullptr, &_descriptorSetLayout);
+
+    // --- Descriptor pool ---
+    VkDescriptorPoolSize poolSize{};
+    poolSize.type            = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+    poolSize.descriptorCount = 3;
+
+    VkDescriptorPoolCreateInfo poolInfo{};
+    poolInfo.sType         = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+    poolInfo.maxSets       = 1;
+    poolInfo.poolSizeCount = 1;
+    poolInfo.pPoolSizes    = &poolSize;
+
+    vkCreateDescriptorPool(_device, &poolInfo, nullptr, &_descriptorPool);
+
+    // VkBuffer     buffers[3] = {gridBuffer, accumBuffer, photonBuffer};
+    // VkDeviceSize sizes[3]   = {gridSize, accumSize, photonBatchSize};
+
+    // for (int i = 0; i < 3; i++)
+    // {
+    //     VkDescriptorBufferInfo bufInfo{};
+    //     bufInfo.buffer = buffers[i];
+    //     bufInfo.offset = 0;
+    //     bufInfo.range  = sizes[i];
+
+    //     VkWriteDescriptorSet write{};
+    //     write.sType           = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+    //     write.dstSet          = descriptorSet;
+    //     write.dstBinding      = i;
+    //     write.descriptorCount = 1;
+    //     write.descriptorType  = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+    //     write.pBufferInfo     = &bufInfo;
+
+    //     vkUpdateDescriptorSets(device, 1, &write, 0, nullptr);
+    // }
 }
 
-void VulkanContext::queryInfo() const {
+void VulkanContext::createPipeline()
+{
+    // --- Pipeline layout ---
+    VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
+    pipelineLayoutInfo.sType          = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+    pipelineLayoutInfo.setLayoutCount = 1;
+    pipelineLayoutInfo.pSetLayouts    = &_descriptorSetLayout;
+
+    vkCreatePipelineLayout(_device, &pipelineLayoutInfo, nullptr, &_pipelineLayout);
+
+    // Pipeline might change dynamically (different shaders)
+}
+
+void VulkanContext::queryInfo() const
+{
 
     // get highest available version
     uint32_t availVersion;
     vkEnumerateInstanceVersion(&availVersion);
-    Log::info("Available Vulkan instance version: {}.{}.{}", VK_API_VERSION_MAJOR(availVersion),
-              VK_API_VERSION_MINOR(availVersion), VK_API_VERSION_PATCH(availVersion));
+    Log::info(
+        "Available Vulkan instance version: {}.{}.{}",
+        VK_API_VERSION_MAJOR(availVersion),
+        VK_API_VERSION_MINOR(availVersion),
+        VK_API_VERSION_PATCH(availVersion)
+    );
 
     // get physical device count
     uint32_t deviceCount = 0;
@@ -101,12 +186,13 @@ void VulkanContext::queryInfo() const {
     // --- Physical Devices ---
     VkPhysicalDeviceProperties deviceProperties;
     Log::info("Vulkan compatible devices:");
-    for (uint32_t d = 0; d < deviceCount; d++) {
+    for (uint32_t d = 0; d < deviceCount; d++)
+    {
         const auto physicalDevice = physicalDevices[d];
 
         // get device properties
         vkGetPhysicalDeviceProperties(physicalDevice, &deviceProperties);
-        Log::info_t("  {}", deviceProperties.deviceName);
+        Log::info_t("  {}{}", Log::Color::Bold, deviceProperties.deviceName);
 
         // --- Queue Families ---
         // get queue family count
@@ -116,7 +202,8 @@ void VulkanContext::queryInfo() const {
         // get queue all families
         std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
         vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &queueFamilyCount, queueFamilies.data());
-        for (uint32_t f = 0; f < queueFamilyCount; f++) {
+        for (uint32_t f = 0; f < queueFamilyCount; f++)
+        {
             auto queueFamily = queueFamilies[f];
 
             // get queue count
@@ -156,7 +243,8 @@ void VulkanContext::queryInfo() const {
         vkGetPhysicalDeviceMemoryProperties(physicalDevice, &memProps);
 
         Log::info_t("    memory properties:");
-        for (uint32_t i = 0; i < memProps.memoryHeapCount; i++) {
+        for (uint32_t i = 0; i < memProps.memoryHeapCount; i++)
+        {
             auto& heap = memProps.memoryHeaps[i];
 
             std::string flags;
@@ -166,7 +254,8 @@ void VulkanContext::queryInfo() const {
                 flags += "MULTI_INSTANCE ";
             Log::info_t("      heap {}: {} MB {}", i, heap.size / 1024 / 1024, flags);
 
-            for (uint32_t j = 0; j < memProps.memoryTypeCount; j++) {
+            for (uint32_t j = 0; j < memProps.memoryTypeCount; j++)
+            {
                 auto& type = memProps.memoryTypes[j];
                 if (type.heapIndex != i)
                     continue;
@@ -183,10 +272,16 @@ void VulkanContext::queryInfo() const {
                 Log::info_t("        type {}: {}", j, flags);
             }
         }
+
+        Log::info_t("");
     }
 }
 
-VulkanContext::~VulkanContext() {
+VulkanContext::~VulkanContext()
+{
+    vkDestroyPipelineLayout(_device, _pipelineLayout, nullptr);
+    vkDestroyDescriptorPool(_device, _descriptorPool, nullptr);
+    vkDestroyDescriptorSetLayout(_device, _descriptorSetLayout, nullptr);
     vkDestroyDevice(_device, nullptr);
     vkDestroyInstance(_instance, nullptr);
 }
