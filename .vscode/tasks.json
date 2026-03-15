@@ -1,0 +1,85 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "cmake",
+			"type": "shell",
+			"command": "cmake",
+			"args": [
+				"-G",
+				"Ninja",
+				"-S",
+				"${workspaceFolder}/src/",
+				"-B",
+				"${workspaceFolder}/build/"
+			],
+			"presentation": {
+				"echo": false,
+				"reveal": "silent",
+				"focus": false,
+				"panel": "shared",
+				"showReuseMessage": false,
+				"clear": true,
+				"close": false
+			},
+			"group": "build"
+		},
+		{
+			"label": "build",
+			"type": "shell",
+			"command": "ninja",
+			"options": {
+				"cwd": "${workspaceFolder}/build/"
+			},
+			"args": [
+				"-j",
+				"8",
+			],
+			"presentation": {
+				"echo": false,
+				"reveal": "silent",
+				"focus": false,
+				"panel": "shared",
+				"showReuseMessage": false,
+				"clear": true,
+				"close": false
+			},
+			"group": "build"
+		},
+		{
+			"label": "run (+build+cmake)",
+			"type": "shell",
+			"command": "${workspaceFolder}/build/core/core",
+			"presentation": {
+				"echo": false,
+				"reveal": "always",
+				"focus": true,
+				"panel": "shared",
+				"showReuseMessage": false,
+				"clear": true,
+				"close": false
+			},
+			"group": "test",
+			"dependsOn": [
+				"cmake",
+				"build"
+			],
+			"dependsOrder": "sequence"
+		},
+		{
+			"label": "run",
+			"type": "shell",
+			"command": "${workspaceFolder}/build/core/core",
+			"presentation": {
+				"echo": false,
+				"reveal": "always",
+				"focus": true,
+				"panel": "shared",
+				"showReuseMessage": false,
+				"clear": true,
+				"close": false
+			},
+			"group": "test"
+		}
+	]
+}
