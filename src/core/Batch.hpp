@@ -1,7 +1,8 @@
 #pragma once
 
 #include "Config.hpp"
-#include <cstddef>
+#include <algorithm>
+#include <execution>
 
 struct Batch
 {
@@ -18,6 +19,13 @@ struct Batch
     vector<real> ky;
     vector<real> kz;
 
+    template <typename F> void for_each(F&& f)
+    {
+        std::vector<size_t> indices(size);
+        std::iota(indices.begin(), indices.end(), 0);
+        std::for_each(std::execution::par_unseq, indices.begin(), indices.end(), std::forward<F>(f));
+    }
+
     void resize(size_t size)
     {
         this->size = size;
@@ -33,6 +41,11 @@ struct Batch
         kx.resize(size, 0.);
         ky.resize(size, 0.);
         kz.resize(size, 0.);
+    }
+
+    size_t getSize() const
+    {
+        return size;
     }
 
   private:

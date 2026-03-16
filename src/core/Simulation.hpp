@@ -1,8 +1,9 @@
 #pragma once
 
-#include "Launcher.hpp"
-#include "Propagator.hpp"
-#include "Scatterer.hpp"
+#include "VulkanContext.hpp"
+#include "launcher/Launcher.hpp"
+#include "propagator/Propagator.hpp"
+#include "scatterer/Scatterer.hpp"
 #include <memory>
 
 class Simulation
@@ -10,13 +11,29 @@ class Simulation
   public:
     Simulation();
 
+    virtual ~Simulation() = default;
+
     void setup();
 
-    void launch();
+    void run();
 
-    void propagate();
+    void setLauncher(std::unique_ptr<Launcher> launcher)
+    {
+        if (!_launcher.get())
+            _launcher = std::move(launcher);
+    }
 
-    void scatter();
+    void setPropagator(std::unique_ptr<Propagator> propagator)
+    {
+        if (!_propagator.get())
+            _propagator = std::move(propagator);
+    }
+
+    void setScatterer(std::unique_ptr<Scatterer> scatterer)
+    {
+        if (!_scatterer.get())
+            _scatterer = std::move(scatterer);
+    }
 
   private:
     std::unique_ptr<Launcher>   _launcher;
@@ -24,4 +41,6 @@ class Simulation
     std::unique_ptr<Scatterer>  _scatterer;
 
     Batch _batch;
+
+    VulkanContext _context;
 };
