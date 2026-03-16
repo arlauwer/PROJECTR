@@ -1,5 +1,5 @@
 #include "TestLauncher.hpp"
-#include <cstddef>
+#include "Random.hpp"
 
 void TestLauncher::launch(Batch& batch)
 {
@@ -11,13 +11,14 @@ void TestLauncher::launch(Batch& batch)
 
             batch.acc[i] = 0.0;
 
-            batch.rx[i] = 0.0;
-            batch.ry[i] = 0.0;
-            batch.rz[i] = 0.0;
+            batch.rx[i] = Random::uniform(-1, 1);
+            batch.ry[i] = Random::uniform(-1, 1);
+            batch.rz[i] = Random::uniform(-1, 1);
 
-            batch.kx[i] = 1.0;
-            batch.ky[i] = 0.0;
-            batch.kz[i] = 0.0;
+            auto [kx, ky, kz] = Random::direction();
+            batch.kx[i]       = kx;
+            batch.ky[i]       = ky;
+            batch.kz[i]       = kz;
         }
     );
 }
