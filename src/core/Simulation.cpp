@@ -16,21 +16,33 @@ void Simulation::run()
 {
     // photon loop
     _launcher->launch(_batch);
-    // _propagator->propagate(_batch);
+    _propagator->propagate(_batch);
     // _scatterer->scatter(_batch);
 
     for (size_t i = 0; i < _batch.getSize(); i++)
     {
-        double rx     = _batch.rx[i];
-        double ry     = _batch.ry[i];
-        double rz     = _batch.rz[i];
-        double kx     = _batch.kx[i];
-        double ky     = _batch.ky[i];
-        double kz     = _batch.kz[i];
-        double k      = std::sqrt(kx * kx + ky * ky + kz * kz);
-        double weight = _batch.weight[i];
-        double lambda = _batch.lambda[i];
+        real rx     = _batch.rx[i];
+        real ry     = _batch.ry[i];
+        real rz     = _batch.rz[i];
+        real nx     = _batch.nx[i];
+        real ny     = _batch.ny[i];
+        real nz     = _batch.nz[i];
+        real k      = std::sqrt(nx * nx + ny * ny + nz * nz);
+        real weight = _batch.weight[i];
+        real lambda = _batch.lambda[i];
 
-        Log::debug("Photon {}:\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}", i, rx, ry, rz, kx, ky, kz, k, weight, lambda);
+        Log::debug(
+            "Photon {}:\t{:.3f}\t{:.3f}\t{:.3f}\t{:.3f}\t{:.3f}\t{:.3f}\t{:.3f}\t{:.3f}\t{:.3f}",
+            i,
+            rx,
+            ry,
+            rz,
+            nx,
+            ny,
+            nz,
+            k,
+            weight,
+            lambda
+        );
     }
 }

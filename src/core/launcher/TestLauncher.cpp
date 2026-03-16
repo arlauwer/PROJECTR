@@ -4,21 +4,23 @@
 void TestLauncher::launch(Batch& batch)
 {
     batch.for_each(
-        [&batch](size_t i)
+        [&batch](size_t b)
         {
-            batch.weight[i] = 1.0;
-            batch.lambda[i] = 1.0;
+            batch.weight[b] = 1.0;
+            batch.lambda[b] = 1.0;
 
-            batch.acc[i] = 0.0;
+            batch.accum[b] = 0.0;
+            // batch.target[b] = Random::exponential(1.0);
+            batch.target[b] = 1e6;
 
-            batch.rx[i] = Random::uniform(-1, 1);
-            batch.ry[i] = Random::uniform(-1, 1);
-            batch.rz[i] = Random::uniform(-1, 1);
+            batch.rx[b] = Random::uniform(-1, 1);
+            batch.ry[b] = Random::uniform(-1, 1);
+            batch.rz[b] = Random::uniform(-1, 1);
 
-            auto [kx, ky, kz] = Random::direction();
-            batch.kx[i]       = kx;
-            batch.ky[i]       = ky;
-            batch.kz[i]       = kz;
+            auto [nx, ny, nz] = Random::direction();
+            batch.nx[b]       = nx;
+            batch.ny[b]       = ny;
+            batch.nz[b]       = nz;
         }
     );
 }

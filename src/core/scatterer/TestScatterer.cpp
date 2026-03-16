@@ -3,11 +3,11 @@
 void TestScatterer::scatter(Batch& batch)
 {
     batch.for_each(
-        [&batch](size_t i)
+        [&batch](size_t b)
         {
-            batch.kx[i] = -1;
-            batch.ky[i] = 0;
-            batch.kz[i] = 0;
+            batch.nx[b] = -1;
+            batch.ny[b] = 0;
+            batch.nz[b] = 0;
         }
     );
 }
