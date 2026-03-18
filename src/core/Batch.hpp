@@ -1,9 +1,15 @@
 #pragma once
 
 #include "Config.hpp"
+
 #include <algorithm>
+#include <cstddef>
 #include <execution>
 #include <sys/types.h>
+
+#ifndef NDEBUG
+#include "Log.hpp"
+#endif
 
 struct Batch
 {
@@ -21,16 +27,21 @@ struct Batch
     vector<real> ny;
     vector<real> nz;
 
-    vector<uint64_t> m;
-    vector<uint32_t> i;
-    vector<uint32_t> j;
-    vector<uint32_t> k;
+    vector<int> m;
+    vector<int> i;
+    vector<int> j;
+    vector<int> k;
 
     template <typename F> void for_each(F&& f)
     {
         std::vector<size_t> indices(size);
         std::iota(indices.begin(), indices.end(), 0);
-        std::for_each(EXECUTION_POLICY, indices.begin(), indices.end(), std::forward<F>(f));
+#ifndef NDEBUG
+        std::for_each(std::execution::seq, indices.begin(), indices.end(), std::forward<F>(f));
+        Log::debug("Using serial for_each");
+#else
+        std::for_each(std::execution::par_unseq, indices.begin(), indices.end(), std::forward<F>(f));
+#endif
     }
 
     void resize(size_t size)

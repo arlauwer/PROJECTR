@@ -1,6 +1,6 @@
 #include "VulkanContext.hpp"
 
-#include "log.hpp"
+#include "Log.hpp"
 
 #include <cstdint>
 #include <format>

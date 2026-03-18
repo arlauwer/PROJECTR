@@ -1,6 +1,6 @@
 
 #include "Simulation.hpp"
-#include "log.hpp"
+#include "Log.hpp"
 #include <cmath>
 
 Simulation::Simulation() { }

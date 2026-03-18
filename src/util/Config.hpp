@@ -1,10 +1,5 @@
 #pragma once
 
-// #define EXECUTION_POLICY std::execution::par_unseq
-#include <cstdint>
-#include <sys/types.h>
-#define EXECUTION_POLICY std::execution::seq
-
 #include <float.h>
 #include <string>
 #include <vector>
@@ -20,7 +15,7 @@ using real = float;
 using std::string;
 using std::vector;
 
-inline uint32_t sign(real x)
+template <typename T> int sign(T val)
 {
-    return (x > 0.) - (x < 0.);
+    return (T(0) < val) - (val < T(0));
 }

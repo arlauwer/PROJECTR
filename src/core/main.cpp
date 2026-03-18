@@ -8,7 +8,7 @@ int main()
     Simulation sim;
 
     sim.setLauncher(std::make_unique<TestLauncher>());
-    sim.setPropagator(std::make_unique<TestPropagator>(1, 10));
+    sim.setPropagator(std::make_unique<TestPropagator>(1, 3));
     sim.setScatterer(std::make_unique<TestScatterer>());
 
     sim.setup();

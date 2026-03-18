@@ -33,10 +33,10 @@ void TestPropagator::propagate(Batch& batch)
             real& ny = batch.ny[b];
             real& nz = batch.nz[b];
 
-            uint64_t& m = batch.m[b];
-            uint32_t& i = batch.i[b];
-            uint32_t& j = batch.j[b];
-            uint32_t& k = batch.k[b];
+            int& m = batch.m[b];
+            int& i = batch.i[b];
+            int& j = batch.j[b];
+            int& k = batch.k[b];
 
             // set initial cell indices
             i = std::floor((rx - _grid.xmin) / dx);
@@ -47,9 +47,9 @@ void TestPropagator::propagate(Batch& batch)
             while (accum < target && 0 <= m && m < N)
             {
                 // fix this crap
-                uint32_t xdir = sign(nx);
-                uint32_t ydir = sign(ny);
-                uint32_t zdir = sign(nz);
+                int xdir = sign(nx);
+                int ydir = sign(ny);
+                int zdir = sign(nz);
 
                 // real xE  = (xdir > 0) ? _grid.bx[i + 1] : _grid.bx[i];
                 // real yE  = (ydir > 0) ? _grid.by[j + 1] : _grid.by[j];

@@ -1,13 +1,15 @@
 #include "TestScatterer.hpp"
+#include "Random.hpp"
 
 void TestScatterer::scatter(Batch& batch)
 {
     batch.for_each(
         [&batch](size_t b)
         {
-            batch.nx[b] = -1;
-            batch.ny[b] = 0;
-            batch.nz[b] = 0;
+            auto [nx, ny, nz] = Random::direction();
+            batch.nx[b]       = nx;
+            batch.ny[b]       = ny;
+            batch.nz[b]       = nz;
         }
     );
 }
