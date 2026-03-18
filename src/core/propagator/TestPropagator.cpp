@@ -44,16 +44,13 @@ void TestPropagator::propagate(Batch& batch)
             k = std::floor((rz - _grid.zmin) / dz);
             m = i * Nz * Ny + j * Ny + k;
 
-            while (accum < target && 0 <= m && m < N)
+            // while inside the grid
+            while (0 <= m && m < N)
             {
-                // fix this crap
                 int xdir = sign(nx);
                 int ydir = sign(ny);
                 int zdir = sign(nz);
 
-                // real xE  = (xdir > 0) ? _grid.bx[i + 1] : _grid.bx[i];
-                // real yE  = (ydir > 0) ? _grid.by[j + 1] : _grid.by[j];
-                // real zE  = (zdir > 0) ? _grid.bz[k + 1] : _grid.bz[k];
                 real xE  = _grid.bx[i + (xdir + 1) / 2];
                 real yE  = _grid.by[j + (ydir + 1) / 2];
                 real zE  = _grid.bz[k + (zdir + 1) / 2];
@@ -61,32 +58,49 @@ void TestPropagator::propagate(Batch& batch)
                 real dsy = (std::abs(ny) > 1e-15) ? (yE - ry) / ny : REAL_MAX;
                 real dsz = (std::abs(nz) > 1e-15) ? (zE - rz) / nz : REAL_MAX;
 
+                // choose the smallest distance
+                real ds;
+                if (dsx < dsy && dsx < dsz)
+                    ds = dsx;
+                else if (dsy < dsz)
+                    ds = dsy;
+                else
+                    ds = dsz;
+
+                double accum_next = accum + ds;
+
+                if (accum_next > target)
+                {
+                    ds = target - accum;
+
+                    // propagate to the target
+                    rx += nx * ds;
+                    ry += ny * ds;
+                    rz += nz * ds;
+                    accum = target;
+                    break; // break at target
+                }
+
+                // propagate to the next cell
+                rx += nx * ds;
+                ry += ny * ds;
+                rz += nz * ds;
+                accum = accum_next;
+
                 if (dsx <= dsy && dsx <= dsz)
                 {
-                    rx = xE;
-                    ry += ny * dsx;
-                    rz += nz * dsx;
                     i += xdir;
                     m += xdir * Nz * Ny;
-                    accum += dsx;
                 }
-                else if (dsy < dsx && dsy <= dsz)
+                else if (dsy <= dsz)
                 {
-                    ry = yE;
-                    rx += nx * dsy;
-                    rz += nz * dsy;
                     j += ydir;
                     m += ydir * Nz;
-                    accum += dsy;
                 }
                 else
                 {
-                    rz = zE;
-                    rx += nx * dsz;
-                    ry += ny * dsz;
                     k += zdir;
                     m += zdir;
-                    accum += dsz;
                 }
             }
         }
