@@ -11,7 +11,8 @@ CartesianGrid::CartesianGrid(
       zmax(zmax),
       Nx(Nx),
       Ny(Ny),
-      Nz(Nz)
+      Nz(Nz),
+      N(Nx * Ny * Nz)
 {
     bx.resize(Nx + 1);
     by.resize(Ny + 1);

@@ -2,6 +2,8 @@
 
 #include "CartesianGrid.hpp"
 #include "Propagator.hpp"
+#include "RadiationField.hpp"
+#include "WavGrid.hpp"
 
 class TestPropagator : public Propagator
 {
@@ -10,6 +12,11 @@ class TestPropagator : public Propagator
 
     void propagate(Batch& batch) override;
 
+    void test(real wavelength);
+
   private:
     CartesianGrid _grid;
+
+    WavGrid        _radWavGrid;
+    RadiationField _rad;
 };

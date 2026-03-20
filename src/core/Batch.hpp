@@ -32,6 +32,11 @@ struct Batch
     vector<int> j;
     vector<int> k;
 
+    real luminosity(size_t b) const
+    {
+        return weight[b] / lambda[b];
+    }
+
     template <typename F> void for_each(F&& f)
     {
         std::vector<size_t> indices(size);
