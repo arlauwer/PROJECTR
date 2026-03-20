@@ -17,6 +17,8 @@ CartesianGrid::CartesianGrid(
     bx.resize(Nx + 1);
     by.resize(Ny + 1);
     bz.resize(Nz + 1);
+    kappa.resize(N);
+    std::fill(kappa.begin(), kappa.end(), 1.);
 
     for (size_t i = 0; i < Nx + 1; i++)
     {

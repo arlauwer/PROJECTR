@@ -1,5 +1,5 @@
 #include "TestPropagator.hpp"
-#include "Math.hpp"
+#include <algorithm>
 #include <cmath>
 #include <cstddef>
 #include <float.h>
@@ -7,48 +7,30 @@
 TestPropagator::TestPropagator(real extent, size_t N)
     : _grid(-extent, extent, -extent, extent, -extent, extent, N, N, N),
       _radWavGrid({1.0}),
-      _rad(N, 1)
+      _rad(_grid.N, 1) // dangerous order here
 
 {
-}
-
-void TestPropagator::test(real wavelength, real luminosity, real ds)
-{
-    int wavIndex = _radWavGrid.index(wavelength);
-    if (wavIndex >= 0)
-    {
-        double lnExtBeg = 0.; // extinction factor and its logarithm at begin of current segment
-        double extBeg   = 1.;
-
-        double lnExtEnd = -segment.tauExt(); // extinction factor and its logarithm at end of current segment
-        double extEnd   = exp(lnExtEnd);
-        int    m        = segment.m();
-        if (m >= 0)
-        {
-            // use this flavor of the lnmean function to avoid recalculating the logarithm of the extinction
-            double extMean = Math::lnmean(extEnd, extBeg, lnExtEnd, lnExtBeg);
-            double Lds     = luminosity * extMean * ds;
-            _rad(m, wavIndex) += Lds;
-        }
-        lnExtBeg = lnExtEnd;
-        extBeg   = extEnd;
-    }
 }
 
 void TestPropagator::propagate(Batch& batch)
 {
-    const int  Nx  = _grid.Nx;
-    const int  Ny  = _grid.Ny;
-    const int  Nz  = _grid.Nz;
-    const int  N   = _grid.N;
-    const int  Nzy = Nz * Ny;
-    const real dx  = (_grid.xmax - _grid.xmin) / static_cast<real>(Nx);
-    const real dy  = (_grid.ymax - _grid.ymin) / static_cast<real>(Ny);
-    const real dz  = (_grid.zmax - _grid.zmin) / static_cast<real>(Nz);
+    const int           Nx    = _grid.Nx;
+    const int           Ny    = _grid.Ny;
+    const int           Nz    = _grid.Nz;
+    const int           N     = _grid.N;
+    const int           Nzy   = Nz * Ny;
+    const real          dx    = (_grid.xmax - _grid.xmin) / static_cast<real>(Nx);
+    const real          dy    = (_grid.ymax - _grid.ymin) / static_cast<real>(Ny);
+    const real          dz    = (_grid.zmax - _grid.zmin) / static_cast<real>(Nz);
+    const vector<real>& kappa = _grid.kappa;
 
     batch.for_each(
-        [this, &batch, Nx, Ny, Nz, N, Nzy, dx, dy, dz](size_t b)
+        [this, &batch, &kappa, Nx, Ny, Nz, N, Nzy, dx, dy, dz](size_t b)
         {
+            constexpr real epsilon = 1e-15;
+
+            real&       weight = batch.weight[b];
+            const real& lambda = batch.lambda[b];
             real&       accum  = batch.accum[b];
             real&       target = batch.target[b];
             real&       rx     = batch.rx[b];
@@ -62,7 +44,11 @@ void TestPropagator::propagate(Batch& batch)
             int&        k      = batch.k[b];
             int&        m      = batch.m[b];
 
-            constexpr real epsilon = 1e-15;
+            if (m < 0 || m >= _grid.N)
+                return;
+
+            // radiation field wavelength grid index
+            const size_t radWavIndex = _radWavGrid.index(lambda);
 
             // Initialize cell indices
             i = static_cast<int>(std::floor((rx - _grid.xmin) / dx));
@@ -89,25 +75,39 @@ void TestPropagator::propagate(Batch& batch)
             real       sz = (std::abs(nz) > epsilon) ? (zE - rz) / nz : REAL_MAX;
 
             // Traverse
-            while (m >= 0 && m < static_cast<int>(N))
+            while (m >= 0 && m < N)
             {
                 real ds = std::min({sx, sy, sz});
 
                 const real accum_next = accum + ds;
-                if (accum_next > target)
+                const bool interacts  = accum_next > target;
+                if (interacts)
                 {
-                    ds = target - accum;
-                    rx += nx * ds;
-                    ry += ny * ds;
-                    rz += nz * ds;
+                    ds    = target - accum;
                     accum = target;
-                    break;
+                }
+                else
+                {
+                    accum = accum_next;
                 }
 
                 rx += nx * ds;
                 ry += ny * ds;
                 rz += nz * ds;
-                accum = accum_next;
+
+                // attenuate
+                const real dtau    = kappa[m] * ds;
+                const real L_begin = weight / lambda;
+                weight *= exp(-dtau);
+                const real L_end = weight / lambda;
+
+                // store radiation field
+                const real Lds = (L_begin - L_end) / dtau;
+                _rad(m, radWavIndex) += Lds;
+
+                // don't propagate to next cell
+                if (interacts)
+                    break;
 
                 if (sx <= sy && sx <= sz)
                 {
@@ -118,7 +118,7 @@ void TestPropagator::propagate(Batch& batch)
                 else if (sy <= sz)
                 {
                     j += ydir;
-                    m += ydir * static_cast<int>(Nz);
+                    m += ydir * Nz;
                     sy += sdy;
                 }
                 else

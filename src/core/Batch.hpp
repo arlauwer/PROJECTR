@@ -7,10 +7,6 @@
 #include <execution>
 #include <sys/types.h>
 
-#ifndef NDEBUG
-#include "Log.hpp"
-#endif
-
 struct Batch
 {
     vector<real> weight;
@@ -32,18 +28,12 @@ struct Batch
     vector<int> j;
     vector<int> k;
 
-    real luminosity(size_t b) const
-    {
-        return weight[b] / lambda[b];
-    }
-
     template <typename F> void for_each(F&& f)
     {
         std::vector<size_t> indices(size);
         std::iota(indices.begin(), indices.end(), 0);
 #ifndef NDEBUG
         std::for_each(std::execution::seq, indices.begin(), indices.end(), std::forward<F>(f));
-        Log::debug("Using serial for_each");
 #else
         std::for_each(std::execution::par_unseq, indices.begin(), indices.end(), std::forward<F>(f));
 #endif

@@ -14,4 +14,7 @@ struct CartesianGrid
     vector<real> bx;
     vector<real> by;
     vector<real> bz;
+
+    // properties
+    vector<real> kappa;
 };
