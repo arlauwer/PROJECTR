@@ -1,11 +1,12 @@
 #pragma once
 
-#include "../Batch.hpp"
+#include "../grid/Grid.hpp"
 
+template <Grid G>
 class Launcher
 {
   public:
     virtual ~Launcher() = default;
 
-    virtual void launch(Batch& batch) = 0;
+    virtual void launch(G::Batch& batch) = 0;
 };

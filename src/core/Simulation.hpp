@@ -2,45 +2,56 @@
 
 #include "VulkanContext.hpp"
 #include "launcher/Launcher.hpp"
-#include "propagator/Propagator.hpp"
 #include "scatterer/Scatterer.hpp"
 #include <memory>
 
+template <Grid G>
 class Simulation
 {
   public:
-    Simulation();
+    Simulation(size_t batch_size)
+        : _batch(batch_size)
+    {
+    }
 
     virtual ~Simulation() = default;
 
-    void setup();
+    void setup()
+    {
+        _context.queryInfo();
+    }
 
-    void run();
+    void run()
+    {
+        // photon loop
+        _launcher->launch(_batch);
+        _scatterer->scatter(_batch);
+    }
 
-    void setLauncher(std::unique_ptr<Launcher> launcher)
+    void setGrid(std::unique_ptr<G> grid)
+    {
+        if (!_grid.get())
+            _grid = std::move(grid);
+    }
+
+    void setLauncher(std::unique_ptr<Launcher<G>> launcher)
     {
         if (!_launcher.get())
             _launcher = std::move(launcher);
     }
 
-    void setPropagator(std::unique_ptr<Propagator> propagator)
-    {
-        if (!_propagator.get())
-            _propagator = std::move(propagator);
-    }
-
-    void setScatterer(std::unique_ptr<Scatterer> scatterer)
+    void setScatterer(std::unique_ptr<Scatterer<G>> scatterer)
     {
         if (!_scatterer.get())
             _scatterer = std::move(scatterer);
     }
 
   private:
-    std::unique_ptr<Launcher>   _launcher;
-    std::unique_ptr<Propagator> _propagator;
-    std::unique_ptr<Scatterer>  _scatterer;
+    std::unique_ptr<G>            _grid;
+    std::unique_ptr<Launcher<G>>  _launcher;
+    std::unique_ptr<Scatterer<G>> _scatterer;
 
-    Batch _batch;
+    G::Batch _batch;
 
     VulkanContext _context;
 };

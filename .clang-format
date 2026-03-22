@@ -63,6 +63,8 @@ ReferenceAlignment: Left
 # Namespaces
 WrapNamespaceBodyWithEmptyLines: Always
 
+# Templates
+AlwaysBreakTemplateDeclarations: Yes
 
 PackConstructorInitializers: Never
 EmptyLineBeforeAccessModifier: LogicalBlock

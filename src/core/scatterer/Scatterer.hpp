@@ -1,11 +1,12 @@
 #pragma once
 
-#include "../Batch.hpp"
+#include "../grid/Grid.hpp"
 
+template <Grid G>
 class Scatterer
 {
   public:
     virtual ~Scatterer() = default;
 
-    virtual void scatter(Batch& batch) = 0;
+    virtual void scatter(G::Batch& batch) = 0;
 };

@@ -1,15 +1,17 @@
 #include "Simulation.hpp"
-#include "launcher/TestLauncher.hpp"
-#include "propagator/TestPropagator.hpp"
+#include "grid/CartesianGrid.hpp"
+#include "launcher/PointLauncher.hpp"
 #include "scatterer/TestScatterer.hpp"
 
 int main()
 {
-    Simulation sim;
+    Simulation<CartesianGrid> sim(16);
 
-    sim.setLauncher(std::make_unique<TestLauncher>());
-    sim.setPropagator(std::make_unique<TestPropagator>(1, 3));
-    sim.setScatterer(std::make_unique<TestScatterer>());
+    const vector<real> borders = {1, 2};
+
+    sim.setGrid(std::make_unique<CartesianGrid>(-1, 1, -1, 1, -1, 1, 3, 3, 3, borders));
+    sim.setLauncher(std::make_unique<PointLauncher<CartesianGrid>>());
+    sim.setScatterer(std::make_unique<TestScatterer<CartesianGrid>>());
 
     sim.setup();
     sim.run();

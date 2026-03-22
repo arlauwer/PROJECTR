@@ -5,16 +5,14 @@
 
 struct WavGrid
 {
-    WavGrid(const vector<real>& bw);
+    WavGrid(const vector<real>& borders);
 
-    real   wmin, wmax;
-    size_t numBins;
-
-    // borders (N+1)
-    vector<real> bw;
+    vector<real> borders;
+    size_t       numBins;
+    real         wmin, wmax;
 
     size_t index(real wav) const
     {
-        return std::upper_bound(bw.begin(), bw.end(), wav) - bw.begin();
+        return std::upper_bound(borders.begin(), borders.end(), wav) - borders.begin();
     }
 };

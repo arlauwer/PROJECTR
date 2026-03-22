@@ -14,7 +14,8 @@ inline thread_local pcg64 rng(pcg_extras::seed_seq_from<std::random_device>{});
 inline thread_local pcg32 rng(pcg_extras::seed_seq_from<std::random_device>{});
 #endif
 
-inline std::uniform_real_distribution<real> dist(0.0, 1.0);
+// not sure if thread_local is needed here
+inline thread_local std::uniform_real_distribution<real> dist(0.0, 1.0);
 
 inline real uniform()
 {
