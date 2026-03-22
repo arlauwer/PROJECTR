@@ -49,6 +49,11 @@ class CartesianGrid : public Grid
         return i * _Nzy + j * _Nz + k;
     }
 
+    bool inside(int i, int j, int k) const
+    {
+        return i >= 0 && i < _Nx && j >= 0 && j < _Ny && k >= 0 && k < _Nz;
+    }
+
     void writeRadiationField(const string& filepath) const;
 
   private:

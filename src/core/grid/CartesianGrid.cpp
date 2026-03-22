@@ -43,7 +43,7 @@ CartesianGrid::CartesianGrid(
 
     _N = Nx * Ny * Nz;
 
-    _kappa.resize(_N, 1.);
+    _kappa.resize(_N, 1.0);
     _albedo.resize(_N, 0.5);
 
     // force enable radiation field
@@ -115,28 +115,25 @@ void CartesianGrid::propagate(::Batch& base)
             const int ydir = sign(ny);
             const int zdir = sign(nz);
 
-            // Initialize distance to cross boundary per axis
-            const real sdx = (std::abs(nx) > epsilon) ? std::abs(_dx / nx) : REAL_MAX;
-            const real sdy = (std::abs(ny) > epsilon) ? std::abs(_dy / ny) : REAL_MAX;
-            const real sdz = (std::abs(nz) > epsilon) ? std::abs(_dz / nz) : REAL_MAX;
-
-            // Initialize distance to first boundary per axis
-            const real xE = _bx[i + (xdir + 1) / 2];
-            const real yE = _by[j + (ydir + 1) / 2];
-            const real zE = _bz[k + (zdir + 1) / 2];
-            real       sx = (std::abs(nx) > epsilon) ? (xE - rx) / nx : REAL_MAX;
-            real       sy = (std::abs(ny) > epsilon) ? (yE - ry) / ny : REAL_MAX;
-            real       sz = (std::abs(nz) > epsilon) ? (zE - rz) / nz : REAL_MAX;
-
             // Traverse
             while (true)
             {
-                real ds = std::min({sx, sy, sz});
+                // determine distance to next boundary
+                const real xE = _bx[i + (xdir + 1) / 2];
+                const real yE = _by[j + (ydir + 1) / 2];
+                const real zE = _bz[k + (zdir + 1) / 2];
+                const real sx = (std::abs(nx) > epsilon) ? (xE - rx) / nx : REAL_MAX;
+                const real sy = (std::abs(ny) > epsilon) ? (yE - ry) / ny : REAL_MAX;
+                const real sz = (std::abs(nz) > epsilon) ? (zE - rz) / nz : REAL_MAX;
+                real       ds = std::min({sx, sy, sz});
 
-                const real accum_next = accum + ds;
+                // determine if interacts
+                const real dtau       = _kappa[m] * ds;
+                const real accum_next = accum + dtau;
                 const bool interacts  = accum_next > target;
                 if (interacts)
                 {
+                    // distance to interaction
                     ds    = target - accum;
                     accum = target;
                 }
@@ -145,44 +142,42 @@ void CartesianGrid::propagate(::Batch& base)
                     accum = accum_next;
                 }
 
+                // propagate
                 rx += nx * ds;
                 ry += ny * ds;
                 rz += nz * ds;
 
                 // attenuate
-                const real dtau    = _kappa[m] * ds;
                 const real L_begin = weight / lambda;
                 weight *= exp(-dtau);
                 const real L_end = weight / lambda;
 
                 // store radiation field
-                const real Lds = (L_begin - L_end) / dtau;
+                const real Lds = dtau > epsilon ? (L_begin - L_end) / dtau : 0.;
                 (*_radField)(m, radWavIndex) += Lds;
 
-                // don't propagate to next cell
+                // don't update cell indices
                 if (interacts)
                     break;
 
+                // update cell indices
                 if (sx <= sy && sx <= sz)
                 {
                     i += xdir;
                     m += xdir * _Nzy;
-                    sx += sdx;
                 }
                 else if (sy <= sz)
                 {
                     j += ydir;
                     m += ydir * _Nz;
-                    sy += sdy;
                 }
                 else
                 {
                     k += zdir;
                     m += zdir;
-                    sz += sdz;
                 }
 
-                if (m < 0 || m >= _N)
+                if (!inside(i, j, k))
                 {
                     m = -1; // photon exited grid
                     break;
