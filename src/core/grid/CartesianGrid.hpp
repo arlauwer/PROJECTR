@@ -3,12 +3,12 @@
 #include "../batch/Batch.hpp"
 #include "../grid/Grid.hpp"
 #include "Config.hpp"
-#include "RadiationField.hpp"
 
 class CartesianGrid : public Grid
 {
-
   public:
+    CartesianGrid(real dmin, real dmax, size_t N, const vector<real>& borders);
+
     CartesianGrid(
         real                xmin,
         real                xmax,
@@ -43,17 +43,20 @@ class CartesianGrid : public Grid
     void                initialize(::Batch& batch) override;
     void                propagate(::Batch& batch) override;
 
+    // grid helper functions
+    int flattenIndex(int i, int j, int k) const
+    {
+        return i * _Nzy + j * _Nz + k;
+    }
+
+    void writeRadiationField(const string& filepath) const;
+
   private:
     // cartesian grid properties
-    real         xmin, xmax, ymin, ymax, zmin, zmax;
-    real         dx, dy, dz;
-    size_t       Nx, Ny, Nz, Nzy, N;
-    vector<real> bx;
-    vector<real> by;
-    vector<real> bz;
-
-    // general grid properties
-    vector<real>                  kappa;
-    vector<real>                  albedo;
-    std::optional<RadiationField> radField;
+    real         _xmin, _xmax, _ymin, _ymax, _zmin, _zmax;
+    real         _dx, _dy, _dz;
+    size_t       _Nx, _Ny, _Nz, _Nzy, _N;
+    vector<real> _bx;
+    vector<real> _by;
+    vector<real> _bz;
 };

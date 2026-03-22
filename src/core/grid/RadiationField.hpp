@@ -25,6 +25,11 @@ struct RadiationField
         return _field[flatIndex(cell, bin)];
     }
 
+    const std::atomic<real>& operator()(size_t cell, size_t bin) const
+    {
+        return _field[flatIndex(cell, bin)];
+    }
+
     const size_t  numBins;
     const WavGrid wavGrid;
 

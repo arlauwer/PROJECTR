@@ -5,11 +5,11 @@
 
 int main()
 {
-    Simulation sim;
+    Simulation sim(65536, 10);
 
     const vector<real> borders = {1, 2};
 
-    sim.setGrid(std::make_unique<CartesianGrid>(-1, 1, -1, 1, -1, 1, 3, 3, 3, borders));
+    sim.setGrid(std::make_unique<CartesianGrid>(-1, 1, 10, borders));
     sim.setLauncher(std::make_unique<PointLauncher>());
     sim.setScatterer(std::make_unique<TestScatterer>());
 

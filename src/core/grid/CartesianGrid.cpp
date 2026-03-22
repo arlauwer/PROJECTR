@@ -1,5 +1,11 @@
 #include "CartesianGrid.hpp"
+#include "FitsImage.hpp"
 #include <cmath>
+
+CartesianGrid::CartesianGrid(real dmin, real dmax, size_t N, const vector<real>& borders)
+    : CartesianGrid(dmin, dmax, dmin, dmax, dmin, dmax, N, N, N, borders)
+{
+}
 
 CartesianGrid::CartesianGrid(
     real                xmin,
@@ -13,35 +19,35 @@ CartesianGrid::CartesianGrid(
     size_t              Nz,
     const vector<real>& borders
 )
-    : xmin(xmin),
-      xmax(xmax),
-      ymin(ymin),
-      ymax(ymax),
-      zmin(zmin),
-      zmax(zmax),
-      dx((xmax - xmin) / static_cast<real>(Nx)),
-      dy((ymax - ymin) / static_cast<real>(Ny)),
-      dz((zmax - zmin) / static_cast<real>(Nz)),
-      Nx(Nx),
-      Ny(Ny),
-      Nz(Nz),
-      Nzy(Nz * Ny)
+    : _xmin(xmin),
+      _xmax(xmax),
+      _ymin(ymin),
+      _ymax(ymax),
+      _zmin(zmin),
+      _zmax(zmax),
+      _dx((xmax - xmin) / static_cast<real>(Nx)),
+      _dy((ymax - ymin) / static_cast<real>(Ny)),
+      _dz((zmax - zmin) / static_cast<real>(Nz)),
+      _Nx(Nx),
+      _Ny(Ny),
+      _Nz(Nz),
+      _Nzy(Nz * Ny)
 {
-    bx.resize(Nx + 1);
-    by.resize(Ny + 1);
-    bz.resize(Nz + 1);
+    _bx.resize(Nx + 1);
+    _by.resize(Ny + 1);
+    _bz.resize(Nz + 1);
 
-    Math::linspace(bx, xmin, xmax, Nx + 1);
-    Math::linspace(by, ymin, ymax, Ny + 1);
-    Math::linspace(bz, zmin, zmax, Nz + 1);
+    Math::linspace(_bx, xmin, xmax, Nx + 1);
+    Math::linspace(_by, ymin, ymax, Ny + 1);
+    Math::linspace(_bz, zmin, zmax, Nz + 1);
 
-    N = Nx * Ny * Nz;
+    _N = Nx * Ny * Nz;
 
-    kappa.resize(N, 1.);
-    albedo.resize(N, 0.5);
+    _kappa.resize(_N, 1.);
+    _albedo.resize(_N, 0.5);
 
     // force enable radiation field
-    radField.emplace(N, borders.size() - 1, borders);
+    _radField.emplace(_N, borders.size() - 1, borders);
 }
 
 unique_ptr<Batch> CartesianGrid::createBatch(size_t size)
@@ -66,10 +72,10 @@ void CartesianGrid::initialize(::Batch& base)
             int&  m  = batch.m[b];
 
             // Initialize cell indices
-            i = static_cast<int>(std::floor((rx - xmin) / dx));
-            j = static_cast<int>(std::floor((ry - ymin) / dy));
-            k = static_cast<int>(std::floor((rz - zmin) / dz));
-            m = i * Nzy + j * Nz + k;
+            i = static_cast<int>(std::floor((rx - _xmin) / _dx));
+            j = static_cast<int>(std::floor((ry - _ymin) / _dy));
+            k = static_cast<int>(std::floor((rz - _zmin) / _dz));
+            m = flattenIndex(i, j, k);
         }
     );
 }
@@ -102,7 +108,7 @@ void CartesianGrid::propagate(::Batch& base)
                 return;
 
             // radiation field wavelength grid index
-            const size_t radWavIndex = radField->wavGrid.index(lambda);
+            const size_t radWavIndex = _radField->wavGrid.index(lambda);
 
             // Initialize step directions
             const int xdir = sign(nx);
@@ -110,14 +116,14 @@ void CartesianGrid::propagate(::Batch& base)
             const int zdir = sign(nz);
 
             // Initialize distance to cross boundary per axis
-            const real sdx = (std::abs(nx) > epsilon) ? std::abs(dx / nx) : REAL_MAX;
-            const real sdy = (std::abs(ny) > epsilon) ? std::abs(dy / ny) : REAL_MAX;
-            const real sdz = (std::abs(nz) > epsilon) ? std::abs(dz / nz) : REAL_MAX;
+            const real sdx = (std::abs(nx) > epsilon) ? std::abs(_dx / nx) : REAL_MAX;
+            const real sdy = (std::abs(ny) > epsilon) ? std::abs(_dy / ny) : REAL_MAX;
+            const real sdz = (std::abs(nz) > epsilon) ? std::abs(_dz / nz) : REAL_MAX;
 
             // Initialize distance to first boundary per axis
-            const real xE = bx[i + (xdir + 1) / 2];
-            const real yE = by[j + (ydir + 1) / 2];
-            const real zE = bz[k + (zdir + 1) / 2];
+            const real xE = _bx[i + (xdir + 1) / 2];
+            const real yE = _by[j + (ydir + 1) / 2];
+            const real zE = _bz[k + (zdir + 1) / 2];
             real       sx = (std::abs(nx) > epsilon) ? (xE - rx) / nx : REAL_MAX;
             real       sy = (std::abs(ny) > epsilon) ? (yE - ry) / ny : REAL_MAX;
             real       sz = (std::abs(nz) > epsilon) ? (zE - rz) / nz : REAL_MAX;
@@ -144,14 +150,14 @@ void CartesianGrid::propagate(::Batch& base)
                 rz += nz * ds;
 
                 // attenuate
-                const real dtau    = kappa[m] * ds;
+                const real dtau    = _kappa[m] * ds;
                 const real L_begin = weight / lambda;
                 weight *= exp(-dtau);
                 const real L_end = weight / lambda;
 
                 // store radiation field
                 const real Lds = (L_begin - L_end) / dtau;
-                (*radField)(m, radWavIndex) += Lds;
+                (*_radField)(m, radWavIndex) += Lds;
 
                 // don't propagate to next cell
                 if (interacts)
@@ -160,13 +166,13 @@ void CartesianGrid::propagate(::Batch& base)
                 if (sx <= sy && sx <= sz)
                 {
                     i += xdir;
-                    m += xdir * Nzy;
+                    m += xdir * _Nzy;
                     sx += sdx;
                 }
                 else if (sy <= sz)
                 {
                     j += ydir;
-                    m += ydir * Nz;
+                    m += ydir * _Nz;
                     sy += sdy;
                 }
                 else
@@ -176,7 +182,7 @@ void CartesianGrid::propagate(::Batch& base)
                     sz += sdz;
                 }
 
-                if (m < 0 || m >= N)
+                if (m < 0 || m >= _N)
                 {
                     m = -1; // photon exited grid
                     break;
@@ -184,4 +190,23 @@ void CartesianGrid::propagate(::Batch& base)
             }
         }
     );
+}
+
+void CartesianGrid::writeRadiationField(const string& filepath) const
+{
+    FitsImage image(_Nx, _Ny, _Nz);
+
+    for (size_t i = 0; i < _Nx; i++)
+    {
+        for (size_t j = 0; j < _Ny; j++)
+        {
+            for (size_t k = 0; k < _Nz; k++)
+            {
+                int m          = flattenIndex(i, j, k);
+                image(i, j, k) = (*_radField)(m, 0);
+            }
+        }
+    }
+
+    image.save(filepath);
 }

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "VulkanContext.hpp"
 #include "batch/Batch.hpp"
 #include "grid/Grid.hpp"
 
@@ -10,7 +9,7 @@ class Scatterer;
 class Simulation
 {
   public:
-    Simulation();
+    Simulation(size_t batch_size, size_t batch_count);
 
     virtual ~Simulation() = default;
 
@@ -31,5 +30,5 @@ class Simulation
 
     unique_ptr<Batch> _batch;
 
-    VulkanContext _context;
+    size_t _batch_size, _batch_count;
 };
