@@ -22,7 +22,7 @@ struct Batch
           nx(size, 0.),
           ny(size, 0.),
           nz(size, 0.),
-          m(size, 0)
+          m(size, -1)
     {
     }
 
@@ -51,5 +51,10 @@ struct Batch
         vector<size_t> indices(size);
         std::iota(indices.begin(), indices.end(), 0);
         std::for_each(std::execution::par_unseq, indices.begin(), indices.end(), std::forward<F>(f));
+    }
+
+    bool allAlive() const
+    {
+        return std::all_of(m.begin(), m.end(), [](int mb) { return mb >= 0; });
     }
 };

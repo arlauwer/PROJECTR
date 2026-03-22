@@ -1,6 +1,7 @@
 #pragma once
 
 #include <float.h>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -13,9 +14,11 @@ using real = float;
 #endif
 
 using std::string;
+using std::unique_ptr;
 using std::vector;
 
-template <typename T> int sign(T val)
+template <typename T>
+int sign(T val)
 {
     return (T(0) < val) - (val < T(0));
 }
