@@ -71,3 +71,18 @@ void Simulation::setScatterer(unique_ptr<Scatterer> scatterer)
     else
         throw std::runtime_error("Scatterer already set");
 }
+
+Grid& Simulation::grid()
+{
+    return *_grid;
+}
+
+Launcher& Simulation::launcher()
+{
+    return *_launcher;
+}
+
+Scatterer& Simulation::scatterer()
+{
+    return *_scatterer;
+}

@@ -51,7 +51,7 @@ CartesianGrid::CartesianGrid(
     _radField.emplace(_N, borders);
 }
 
-unique_ptr<Batch> CartesianGrid::createBatch(size_t size)
+unique_ptr<::Batch> CartesianGrid::createBatch(size_t size)
 {
     return std::make_unique<Batch>(size);
 }
@@ -135,7 +135,7 @@ void CartesianGrid::propagate(::Batch& base)
                 if (interacts)
                 {
                     // distance to interaction
-                    ds    = target - accum;
+                    ds    = (target - accum) / _kappa[m];
                     accum = target;
                 }
                 else
@@ -154,7 +154,7 @@ void CartesianGrid::propagate(::Batch& base)
                 const real L_end = weight / lambda;
 
                 // store radiation field
-                const real Lds = dtau > epsilon ? (L_begin - L_end) / dtau : 0.;
+                const real Lds = dtau > epsilon ? (L_begin - L_end) / _kappa[m] : 0.;
                 (*_radField)(m, radWavIndex) += Lds;
 
                 // don't update cell indices

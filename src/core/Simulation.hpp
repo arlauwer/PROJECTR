@@ -23,6 +23,12 @@ class Simulation
 
     void setScatterer(unique_ptr<Scatterer> scatterer);
 
+    Grid& grid();
+
+    Launcher& launcher();
+
+    Scatterer& scatterer();
+
   private:
     unique_ptr<Grid>      _grid;
     unique_ptr<Launcher>  _launcher;
