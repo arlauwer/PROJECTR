@@ -2,12 +2,20 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "launch (debug)",
+			"name": "launch (main)",
 			"type": "lldb",
 			"request": "launch",
-			"program": "${workspaceFolder}/build/debug/src/core/core",
+			"program": "${workspaceFolder}/build/debug/src/main/main",
 			"console": "internalConsole",
 			"preLaunchTask": "build (debug)"
-		}
+		},
+		{
+			"name": "launch (test)",
+			"type": "lldb",
+			"request": "launch",
+			"program": "${workspaceFolder}/build/debug/test/test",
+			"console": "internalConsole",
+			"preLaunchTask": "build (debug)"
+		},
 	]
 }

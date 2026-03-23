@@ -1,11 +1,11 @@
-#include "Simulation.hpp"
-#include "grid/CartesianGrid.hpp"
-#include "launcher/PointLauncher.hpp"
-#include "scatterer/TestScatterer.hpp"
+#include "../core/Simulation.hpp"
+#include "../core/grid/CartesianGrid.hpp"
+#include "../core/launcher/PointLauncher.hpp"
+#include "../core/scatterer/TestScatterer.hpp"
 
 int main()
 {
-    Simulation sim(1, 1);
+    Simulation sim(65536, 10);
 
     const vector<real> borders = {1, 2};
 

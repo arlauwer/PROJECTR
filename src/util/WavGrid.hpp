@@ -13,6 +13,6 @@ struct WavGrid
 
     size_t index(real wav) const
     {
-        return std::upper_bound(borders.begin(), borders.end(), wav) - borders.begin();
+        return std::upper_bound(borders.begin(), borders.end(), wav) - borders.begin() - 1;
     }
 };

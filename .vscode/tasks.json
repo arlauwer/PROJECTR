@@ -98,7 +98,7 @@
 		{
 			"label": "run (+build)",
 			"type": "shell",
-			"command": "${workspaceFolder}/build/release/src/core/core",
+			"command": "${workspaceFolder}/build/release/src/main/main",
 			"presentation": {
 				"echo": false,
 				"reveal": "always",
@@ -114,7 +114,7 @@
 		{
 			"label": "run",
 			"type": "shell",
-			"command": "${workspaceFolder}/build/release/src/core/core",
+			"command": "${workspaceFolder}/build/release/src/main/main",
 			"presentation": {
 				"echo": false,
 				"reveal": "always",
@@ -125,6 +125,37 @@
 				"close": false
 			},
 			"group": "test"
-		}
+		},
+		{
+			"label": "test (+build)",
+			"type": "shell",
+			"command": "${workspaceFolder}/build/release/test/test",
+			"presentation": {
+				"echo": false,
+				"reveal": "always",
+				"focus": true,
+				"panel": "shared",
+				"showReuseMessage": false,
+				"clear": true,
+				"close": false
+			},
+			"group": "test",
+			"dependsOn": "build"
+		},
+		{
+			"label": "test",
+			"type": "shell",
+			"command": "${workspaceFolder}/build/release/test/test",
+			"presentation": {
+				"echo": false,
+				"reveal": "always",
+				"focus": true,
+				"panel": "shared",
+				"showReuseMessage": false,
+				"clear": true,
+				"close": false
+			},
+			"group": "test"
+		},
 	]
 }

@@ -7,8 +7,8 @@
 
 struct RadiationField
 {
-    RadiationField(size_t numCells, size_t numBins, const vector<real>& borders)
-        : numBins(numBins),
+    RadiationField(size_t numCells, const vector<real>& borders)
+        : numBins(borders.size() - 1),
           wavGrid(borders),
           _field(numCells * numBins)
     {

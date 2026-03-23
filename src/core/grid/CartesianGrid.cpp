@@ -43,11 +43,12 @@ CartesianGrid::CartesianGrid(
 
     _N = Nx * Ny * Nz;
 
-    _kappa.resize(_N, 1.0);
-    _albedo.resize(_N, 0.5);
+    // initialize kappa and albedo
+    _kappa.resize(_N, 0);
+    _albedo.resize(_N, 0);
 
     // force enable radiation field
-    _radField.emplace(_N, borders.size() - 1, borders);
+    _radField.emplace(_N, borders);
 }
 
 unique_ptr<Batch> CartesianGrid::createBatch(size_t size)

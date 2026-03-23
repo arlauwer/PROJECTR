@@ -45,7 +45,7 @@ void Simulation::run()
     if (!cart)
         Log::error("Simulation::run(): Grid is not a CartesianGrid");
 
-    cart->writeRadiationField("test.fits");
+    cart->writeRadiationField("run/test.fits");
 }
 
 void Simulation::setGrid(unique_ptr<Grid> grid)
