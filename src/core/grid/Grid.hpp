@@ -14,6 +14,12 @@ class Grid
     virtual void initialize(Batch& batch) = 0;
     virtual void propagate(Batch& batch)  = 0;
 
+    virtual real volume(int m) const = 0;
+
+    virtual int numCells() const = 0;
+
+    void finalize();
+
     vector<real>& kappa()
     {
         return _kappa;

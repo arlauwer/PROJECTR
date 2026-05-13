@@ -6,6 +6,7 @@
 			"type": "lldb",
 			"request": "launch",
 			"program": "${workspaceFolder}/build/debug/src/main/main",
+			"cwd": "${workspaceFolder}/run",
 			"console": "internalConsole",
 			"preLaunchTask": "build (debug)"
 		},
@@ -14,6 +15,7 @@
 			"type": "lldb",
 			"request": "launch",
 			"program": "${workspaceFolder}/build/debug/test/test",
+			"cwd": "${workspaceFolder}/test",
 			"console": "internalConsole",
 			"preLaunchTask": "build (debug)"
 		},

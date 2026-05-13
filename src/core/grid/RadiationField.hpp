@@ -15,6 +15,11 @@ struct RadiationField
         Math::fill(_field, 0.);
     }
 
+    size_t size() const
+    {
+        return _field.size();
+    }
+
     size_t flatIndex(size_t cell, size_t bin) const
     {
         return cell * numBins + bin;
@@ -28,6 +33,16 @@ struct RadiationField
     const std::atomic<real>& operator()(size_t cell, size_t bin) const
     {
         return _field[flatIndex(cell, bin)];
+    }
+
+    std::atomic<real>& operator[](size_t r)
+    {
+        return _field[r];
+    }
+
+    const std::atomic<real>& operator[](size_t r) const
+    {
+        return _field[r];
     }
 
     const size_t  numBins;

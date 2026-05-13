@@ -43,6 +43,9 @@ class CartesianGrid : public Grid
     void                initialize(::Batch& batch) override;
     void                propagate(::Batch& batch) override;
 
+    real volume(int m) const override;
+    int  numCells() const override;
+
     // grid helper functions
     int flattenIndex(int i, int j, int k) const
     {
@@ -59,7 +62,7 @@ class CartesianGrid : public Grid
   private:
     // cartesian grid properties
     real         _xmin, _xmax, _ymin, _ymax, _zmin, _zmax;
-    real         _dx, _dy, _dz;
+    real         _dx, _dy, _dz, _dV;
     size_t       _Nx, _Ny, _Nz, _Nzy, _N;
     vector<real> _bx;
     vector<real> _by;

@@ -1,6 +1,8 @@
 #include "CartesianGrid.hpp"
 #include "FitsImage.hpp"
+#include "Math.hpp"
 #include <cmath>
+#include <cstddef>
 
 CartesianGrid::CartesianGrid(real dmin, real dmax, size_t N, const vector<real>& borders)
     : CartesianGrid(dmin, dmax, dmin, dmax, dmin, dmax, N, N, N, borders)
@@ -28,6 +30,7 @@ CartesianGrid::CartesianGrid(
       _dx((xmax - xmin) / static_cast<real>(Nx)),
       _dy((ymax - ymin) / static_cast<real>(Ny)),
       _dz((zmax - zmin) / static_cast<real>(Nz)),
+      _dV(_dx * _dy * _dz),
       _Nx(Nx),
       _Ny(Ny),
       _Nz(Nz),
@@ -109,7 +112,8 @@ void CartesianGrid::propagate(::Batch& base)
                 return;
 
             // radiation field wavelength grid index
-            const size_t radWavIndex = _radField->wavGrid.index(lambda);
+            size_t radWavIndex = _radField->wavGrid.index(lambda);
+            Math::clamp(radWavIndex, (size_t)0, _radField->numBins - 1);
 
             // Initialize step directions
             const int xdir = sign(nx);
@@ -186,6 +190,16 @@ void CartesianGrid::propagate(::Batch& base)
             }
         }
     );
+}
+
+real CartesianGrid::volume(int m) const
+{
+    return _dV;
+}
+
+int CartesianGrid::numCells() const
+{
+    return _N;
 }
 
 void CartesianGrid::writeRadiationField(const string& filepath) const

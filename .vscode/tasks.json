@@ -99,6 +99,9 @@
 			"label": "run (+build)",
 			"type": "shell",
 			"command": "${workspaceFolder}/build/release/src/main/main",
+			"options": {
+				"cwd": "${workspaceFolder}/run/"
+			},
 			"presentation": {
 				"echo": false,
 				"reveal": "always",
@@ -115,6 +118,9 @@
 			"label": "run",
 			"type": "shell",
 			"command": "${workspaceFolder}/build/release/src/main/main",
+			"options": {
+				"cwd": "${workspaceFolder}/run/"
+			},
 			"presentation": {
 				"echo": false,
 				"reveal": "always",
@@ -130,6 +136,9 @@
 			"label": "test (+build)",
 			"type": "shell",
 			"command": "${workspaceFolder}/build/release/test/test",
+			"options": {
+				"cwd": "${workspaceFolder}/test/"
+			},
 			"presentation": {
 				"echo": false,
 				"reveal": "always",
@@ -146,6 +155,9 @@
 			"label": "test",
 			"type": "shell",
 			"command": "${workspaceFolder}/build/release/test/test",
+			"options": {
+				"cwd": "${workspaceFolder}/test/"
+			},
 			"presentation": {
 				"echo": false,
 				"reveal": "always",

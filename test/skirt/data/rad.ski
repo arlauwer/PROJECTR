@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- A SKIRT parameter file © Astronomical Observatory, Ghent University -->
+<skirt-simulation-hierarchy type="MonteCarloSimulation" format="9" producer="SKIRT v9.0 (git deb687e-dirty built on 20/04/2026 at 16:15:34)" time="2026-04-20T16:19:13.733">
+    <MonteCarloSimulation userLevel="Regular" simulationMode="ExtinctionOnly" iteratePrimaryEmission="false" iterateSecondaryEmission="false" numPackets="1e6">
+        <random type="Random">
+            <Random seed="0"/>
+        </random>
+        <units type="Units">
+            <SIUnits wavelengthOutputStyle="Wavelength" fluxOutputStyle="Wavelength"/>
+        </units>
+        <cosmology type="Cosmology">
+            <LocalUniverseCosmology/>
+        </cosmology>
+        <sourceSystem type="SourceSystem">
+            <SourceSystem minWavelength="1e-6 m" maxWavelength="2e-6 m">
+                <sources type="Source">
+                
+                    <PointSource positionX="0 m" positionY="0 m" positionZ="0 m" wavelengthBias="0.5">
+                        <sed type="SED">
+                            <FileSED filename="sed.txt"/>
+                        </sed>
+                        <normalization type="LuminosityNormalization">
+                            <IntegratedLuminosityNormalization wavelengthRange="All" integratedLuminosity="1 W"/>
+                        </normalization>
+                    </PointSource>
+
+                </sources>
+            </SourceSystem>
+        </sourceSystem>
+        <mediumSystem type="MediumSystem">
+            <MediumSystem>
+
+                <photonPacketOptions type="PhotonPacketOptions">
+                    <PhotonPacketOptions explicitAbsorption="false" forceScattering="true" minWeightReduction="1e4" minScattEvents="0" pathLengthBias="0.5"/>
+                </photonPacketOptions>
+                
+                <radiationFieldOptions type="RadiationFieldOptions">
+                    <RadiationFieldOptions storeRadiationField="true">
+                        <radiationFieldWLG type="DisjointWavelengthGrid">
+                            <LinBorderWavelengthGrid minWavelength="1 micron" maxWavelength="2 micron" numWavelengthBins="1"/>
+                        </radiationFieldWLG>
+                    </RadiationFieldOptions>
+                </radiationFieldOptions>
+
+                <media type="Medium">
+                    <GeometricMedium>
+                        <geometry type="Geometry">
+                            <PlummerGeometry scaleLength="1 m"/>
+                        </geometry>
+                        <materialMix type="MaterialMix">
+                            <TestMix/>
+                        </materialMix>
+                        <normalization type="MaterialNormalization">
+                            <OpticalDepthMaterialNormalization axis="Z" wavelength="1e-6 m" opticalDepth="2"/>
+                        </normalization>
+                    </GeometricMedium>
+                </media>
+
+                <samplingOptions type="SamplingOptions">
+                    <SamplingOptions numDensitySamples="100"/>
+                </samplingOptions>
+
+                <grid type="SpatialGrid">
+                    <CartesianSpatialGrid minX="-1 m" maxX="1 m" minY="-1 m" maxY="1 m" minZ="-1 m" maxZ="1 m">
+                        <meshX type="Mesh">
+                            <LinMesh numBins="1"/>
+                        </meshX>
+                        <meshY type="Mesh">
+                            <LinMesh numBins="1"/>
+                        </meshY>
+                        <meshZ type="Mesh">
+                            <LinMesh numBins="1"/>
+                        </meshZ>
+                    </CartesianSpatialGrid>
+                </grid>
+
+            </MediumSystem>
+        </mediumSystem>
+        <instrumentSystem type="InstrumentSystem">
+            <InstrumentSystem/>
+        </instrumentSystem>
+        <probeSystem type="ProbeSystem">
+            <ProbeSystem>
+
+                <probes type="Probe">
+                    <ConvergenceInfoProbe probeName="conv" wavelength="1e-6 m" probeAfter="Setup"/>
+                    <RadiationFieldProbe probeName="rad" writeWavelengthGrid="true" probeAfter="Run">
+                        <form type="Form">
+                            <PerCellForm/>
+                        </form>
+                    </RadiationFieldProbe>
+                    <OpticalMaterialPropertiesProbe probeName="opt">
+                        <wavelengthGrid type="WavelengthGrid">
+                            <LinBorderWavelengthGrid minWavelength="1e-6 m" maxWavelength="2e-6 m" numWavelengthBins="1"/>
+                        </wavelengthGrid>
+                    </OpticalMaterialPropertiesProbe>
+                </probes>
+
+            </ProbeSystem>
+        </probeSystem>
+    </MonteCarloSimulation>
+</skirt-simulation-hierarchy>

@@ -42,10 +42,10 @@ TEST(CartesianGrid, AccumulateRadiationField)
     real L_end   = L_begin * exp(-dtau);
 
     RAD[0]  = 0;
-    RAD[1]  = (L_begin - L_end) / dtau;
+    RAD[1]  = (L_begin - L_end) / kappa;
     L_begin = L_end;
     L_end   = L_begin * exp(-dtau);
-    RAD[2]  = (L_begin - L_end) / dtau;
+    RAD[2]  = (L_begin - L_end) / kappa;
 
     for (int i = 0; i < 3; i++)
     {
@@ -138,4 +138,12 @@ TEST(CartesianGrid, ScatterDirection)
 
     for (size_t b = 0; b < 6; b++)
         EXPECT_EQ(batch->m[b], -1) << "Photon " << b << " should have exited";
+}
+
+TEST(CartesianGrid, SKIRTComparison)
+{
+    Random::seed(0);
+
+    vector<real> borders = {0.999, 1.001};
+    real         dlambda = borders[1] - borders[0];
 }

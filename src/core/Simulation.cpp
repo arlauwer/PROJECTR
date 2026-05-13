@@ -1,6 +1,5 @@
 #include "Simulation.hpp"
 #include "Log.hpp"
-#include "grid/CartesianGrid.hpp"
 #include "launcher/Launcher.hpp"
 #include "scatterer/Scatterer.hpp"
 
@@ -40,12 +39,11 @@ void Simulation::run()
         }
         Log::info("Photon batch {}/{} finished", B + 1, _batch_count);
     }
+}
 
-    CartesianGrid* cart = dynamic_cast<CartesianGrid*>(_grid.get());
-    if (!cart)
-        Log::error("Simulation::run(): Grid is not a CartesianGrid");
-
-    cart->writeRadiationField("run/test.fits");
+void Simulation::finalize()
+{
+    _grid->finalize();
 }
 
 void Simulation::setGrid(unique_ptr<Grid> grid)

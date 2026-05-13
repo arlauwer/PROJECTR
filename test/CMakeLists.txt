@@ -19,3 +19,7 @@ target_include_directories(${TARGET} PRIVATE ../src/util ../src/vulkan ../src/co
 
 include(GoogleTest)
 gtest_discover_tests(${TARGET})
+
+target_compile_definitions(${TARGET} PRIVATE
+    TEST_DIR="${CMAKE_CURRENT_SOURCE_DIR}/"
+)

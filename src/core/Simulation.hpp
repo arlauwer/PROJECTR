@@ -17,6 +17,8 @@ class Simulation
 
     void run();
 
+    void finalize();
+
     void setGrid(unique_ptr<Grid> grid);
 
     void setLauncher(unique_ptr<Launcher> launcher);

@@ -5,12 +5,13 @@
 
 int main()
 {
-    Simulation sim(65536, 10);
+    Simulation sim(1e6, 1);
 
-    const vector<real> borders = {1, 2};
+    const real         L       = 1.;
+    const vector<real> borders = {0.999, 1.001};
 
-    sim.setGrid(std::make_unique<CartesianGrid>(-1, 1, 100, borders));
-    sim.setLauncher(std::make_unique<PointLauncher>());
+    sim.setGrid(std::make_unique<CartesianGrid>(-1, 1, 20, borders));
+    sim.setLauncher(std::make_unique<PointLauncher>("skirt/in/sed.txt"));
     sim.setScatterer(std::make_unique<TestScatterer>());
 
     auto& grid = sim.grid();
@@ -19,6 +20,7 @@ int main()
 
     sim.setup();
     sim.run();
+    sim.finalize();
 
     return 0;
 }

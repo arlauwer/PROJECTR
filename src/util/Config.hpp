@@ -1,5 +1,6 @@
 #pragma once
 
+#include <concepts>
 #include <float.h>
 #include <memory>
 #include <string>
@@ -16,6 +17,12 @@ using real = float;
 using std::string;
 using std::unique_ptr;
 using std::vector;
+
+template <typename T>
+concept Real = std::convertible_to<T, real>;
+
+template <typename T>
+concept RealVector = std::convertible_to<T, vector<real>>;
 
 template <typename T>
 int sign(T val)
