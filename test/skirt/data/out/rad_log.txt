@@ -1,34 +1,30 @@
-13/05/2026 19:03:54.744   SKIRT v9.0 (git deb687e-dirty built on 20/04/2026 at 16:15:34)
-13/05/2026 19:03:54.744   Running on archlinux for arno
-13/05/2026 19:03:54.744   Starting simulation rad using 16 threads and a single process...
-13/05/2026 19:03:54.744   Starting setup...
-13/05/2026 19:03:54.744     Panchromatic wavelength regime
-13/05/2026 19:03:54.744     With transfer medium
-13/05/2026 19:03:54.744     Model symmetry: 1D; Spatial grid symmetry: 3D
-13/05/2026 19:03:54.744 !   Selecting a grid with the model symmetry might be more efficient
-13/05/2026 19:03:54.744     Photon life cycle: no explicit absorption; with forced scattering
-13/05/2026 19:03:54.745   FileSED reads spectral energy distribution from text file /home/arno/Documents/code/PROJECTR/test/skirt/data/in/sed.txt...
-13/05/2026 19:03:54.745     Column 1: wavelength <-- wavelength (m)
-13/05/2026 19:03:54.745     Column 2: specific luminosity <-- specificLuminosity (W/m)
-13/05/2026 19:03:54.745   Done reading
-13/05/2026 19:03:54.745   MediumSystem allocated 0.0312 KB of memory
-13/05/2026 19:03:54.745   Calculating medium properties for 1 cells...
-13/05/2026 19:03:54.745   Done calculating medium properties
-13/05/2026 19:03:54.745 - Finished setup in 0.0 s.
-13/05/2026 19:03:54.745   Starting setup output...
-13/05/2026 19:03:54.745   ConvergenceInfoProbe conv wrote spatial grid convergence info to /home/arno/Documents/code/PROJECTR/test/skirt/data/out/rad_conv_convergence.dat
-13/05/2026 19:03:54.745   OpticalMaterialPropertiesProbe opt wrote optical properties to /home/arno/Documents/code/PROJECTR/test/skirt/data/out/rad_opt_opticalprops_0.dat
-13/05/2026 19:03:54.745 - Finished setup output in 0.0 s.
-13/05/2026 19:03:54.745   Starting the run...
-13/05/2026 19:03:54.745   Starting primary emission...
-13/05/2026 19:03:54.745   Launching 1e6 primary emission photon packets
-13/05/2026 19:03:54.804 - Finished primary emission in 0.1 s.
-13/05/2026 19:03:54.804 - Finished the run in 0.1 s.
-13/05/2026 19:03:54.804   Starting final output...
-13/05/2026 19:03:54.804   RadiationFieldProbe rad wrote mean intensity per spatial cell to /home/arno/Documents/code/PROJECTR/test/skirt/data/out/rad_rad_J.dat
-13/05/2026 19:03:54.804   RadiationFieldProbe rad wrote wavelengths for mean intensity to /home/arno/Documents/code/PROJECTR/test/skirt/data/out/rad_rad_wavelengths.dat
-13/05/2026 19:03:54.804 - Finished final output in 0.0 s.
-13/05/2026 19:03:54.804 ! The following warning message was issued during this simulation:
-13/05/2026 19:03:54.804 !     Selecting a grid with the model symmetry might be more efficient
-13/05/2026 19:03:54.804 - Finished simulation rad using 16 threads and a single process in 0.1 s.
-13/05/2026 19:03:54.804   Available memory: 30.4 GB -- Peak memory usage: 8.54 MB (0.0%)
+14/05/2026 21:46:33.778   SKIRT v9.0 (git d762d4b-dirty built on 14/05/2026 at 14:30:50)
+14/05/2026 21:46:33.778   Running on work-arch for arno
+14/05/2026 21:46:33.778   Starting simulation rad using 22 threads and a single process...
+14/05/2026 21:46:33.778   Starting setup...
+14/05/2026 21:46:33.778     Panchromatic wavelength regime
+14/05/2026 21:46:33.778     With transfer medium
+14/05/2026 21:46:33.778     Model and grid symmetry: 3D
+14/05/2026 21:46:33.778     Photon life cycle: no explicit absorption; with forced scattering
+14/05/2026 21:46:33.778   FileSED reads spectral energy distribution from text file /home/arno/Documents/code/PROJECTR/test/skirt/data/in/sed.txt...
+14/05/2026 21:46:33.779     Column 1: wavelength <-- wavelength (m)
+14/05/2026 21:46:33.779     Column 2: specific luminosity <-- specificLuminosity (W/m)
+14/05/2026 21:46:33.779   Done reading
+14/05/2026 21:46:33.779   MediumSystem allocated 0.0312 KB of memory
+14/05/2026 21:46:33.779   Calculating medium properties for 1 cells...
+14/05/2026 21:46:33.781   Done calculating medium properties
+14/05/2026 21:46:33.781 - Finished setup in 0.0 s.
+14/05/2026 21:46:33.781   Starting setup output...
+14/05/2026 21:46:33.781   ConvergenceInfoProbe conv wrote spatial grid convergence info to /home/arno/Documents/code/PROJECTR/test/skirt/data/out/rad_conv_convergence.dat
+14/05/2026 21:46:33.781 - Finished setup output in 0.0 s.
+14/05/2026 21:46:33.781   Starting the run...
+14/05/2026 21:46:33.781   Starting primary emission...
+14/05/2026 21:46:33.781   Launching 1e6 primary emission photon packets
+14/05/2026 21:46:34.000 - Finished primary emission in 0.2 s.
+14/05/2026 21:46:34.000 - Finished the run in 0.2 s.
+14/05/2026 21:46:34.000   Starting final output...
+14/05/2026 21:46:34.000   RadiationFieldProbe rad wrote mean intensity per spatial cell to /home/arno/Documents/code/PROJECTR/test/skirt/data/out/rad_rad_J.dat
+14/05/2026 21:46:34.000   RadiationFieldProbe rad wrote wavelengths for mean intensity to /home/arno/Documents/code/PROJECTR/test/skirt/data/out/rad_rad_wavelengths.dat
+14/05/2026 21:46:34.000 - Finished final output in 0.0 s.
+14/05/2026 21:46:34.000 - Finished simulation rad using 22 threads and a single process in 0.2 s.
+14/05/2026 21:46:34.000   Available memory: 30.8 GB -- Peak memory usage: 8.77 MB (0.0%)

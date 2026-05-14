@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- A SKIRT parameter file © Astronomical Observatory, Ghent University -->
-<skirt-simulation-hierarchy type="MonteCarloSimulation" format="9" producer="SKIRT v9.0 (git deb687e-dirty built on 20/04/2026 at 16:15:34)" time="2026-05-13T19:03:54.736">
+<skirt-simulation-hierarchy type="MonteCarloSimulation" format="9" producer="SKIRT v9.0 (git d762d4b-dirty built on 14/05/2026 at 14:30:50)" time="2026-05-14T21:46:33.749">
     <MonteCarloSimulation userLevel="Regular" simulationMode="ExtinctionOnly" iteratePrimaryEmission="false" iterateSecondaryEmission="false" numPackets="1e6">
         <random type="Random">
-            <Random seed="0"/>
+            <Random seed="1"/>
         </random>
         <units type="Units">
             <SIUnits wavelengthOutputStyle="Wavelength" fluxOutputStyle="Wavelength"/>
@@ -14,16 +14,13 @@
         <sourceSystem type="SourceSystem">
             <SourceSystem minWavelength="1e-6 m" maxWavelength="2e-6 m" wavelengths="5.5e-7 m" sourceBias="0.5">
                 <sources type="Source">
-                    <PointSource positionX="0 m" positionY="0 m" positionZ="0 m" velocityX="0 m/s" velocityY="0 m/s" velocityZ="0 m/s" sourceWeight="1" wavelengthBias="0.5">
+                    <PointSource positionX="0 m" positionY="0 m" positionZ="0 m" velocityX="0 m/s" velocityY="0 m/s" velocityZ="0 m/s" sourceWeight="1" wavelengthBias="0">
                         <sed type="SED">
                             <FileSED filename="sed.txt"/>
                         </sed>
                         <normalization type="LuminosityNormalization">
                             <IntegratedLuminosityNormalization wavelengthRange="All" minWavelength="9e-8 m" maxWavelength="0.0001 m" integratedLuminosity="1 W"/>
                         </normalization>
-                        <wavelengthBiasDistribution type="WavelengthDistribution">
-                            <DefaultWavelengthDistribution/>
-                        </wavelengthBiasDistribution>
                     </PointSource>
                 </sources>
             </SourceSystem>
@@ -31,7 +28,7 @@
         <mediumSystem type="MediumSystem">
             <MediumSystem>
                 <photonPacketOptions type="PhotonPacketOptions">
-                    <PhotonPacketOptions explicitAbsorption="false" forceScattering="true" minWeightReduction="1e4" minScattEvents="0" pathLengthBias="0.5"/>
+                    <PhotonPacketOptions explicitAbsorption="false" forceScattering="true" minWeightReduction="1e4" minScattEvents="0" pathLengthBias="0"/>
                 </photonPacketOptions>
                 <radiationFieldOptions type="RadiationFieldOptions">
                     <RadiationFieldOptions storeRadiationField="true">
@@ -43,13 +40,13 @@
                 <media type="Medium">
                     <GeometricMedium velocityMagnitude="0 m/s" magneticFieldStrength="0 T">
                         <geometry type="Geometry">
-                            <PlummerGeometry scaleLength="1 m"/>
+                            <UniformBoxGeometry minX="-1 m" maxX="1 m" minY="-1 m" maxY="1 m" minZ="-1 m" maxZ="1 m"/>
                         </geometry>
                         <materialMix type="MaterialMix">
-                            <TestMix/>
+                            <TrivialGasMix absorptionCrossSection="1 m2" scatteringCrossSection="0 m2" asymmetryParameter="0"/>
                         </materialMix>
                         <normalization type="MaterialNormalization">
-                            <OpticalDepthMaterialNormalization axis="Z" wavelength="1e-6 m" opticalDepth="2"/>
+                            <OpticalDepthMaterialNormalization axis="Z" wavelength="1e-6 m" opticalDepth="2e-6"/>
                         </normalization>
                     </GeometricMedium>
                 </media>
@@ -83,11 +80,6 @@
                             <PerCellForm/>
                         </form>
                     </RadiationFieldProbe>
-                    <OpticalMaterialPropertiesProbe probeName="opt">
-                        <wavelengthGrid type="WavelengthGrid">
-                            <LinBorderWavelengthGrid minWavelength="1e-6 m" maxWavelength="2e-6 m" numWavelengthBins="1"/>
-                        </wavelengthGrid>
-                    </OpticalMaterialPropertiesProbe>
                 </probes>
             </ProbeSystem>
         </probeSystem>

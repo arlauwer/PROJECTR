@@ -32,7 +32,7 @@ void Simulation::run()
         _launcher->launch(*_batch);
         _grid->initialize(*_batch);
 
-        while (_batch->allAlive())
+        while (_batch->anyAlive())
         {
             _grid->propagate(*_batch);
             _scatterer->scatter(*_batch);

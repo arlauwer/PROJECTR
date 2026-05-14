@@ -1,10 +1,21 @@
 #pragma once
+#include <atomic>
 #include <format>
 #include <print>
 #include <string_view>
 
 namespace Log
 {
+
+enum class Level
+{
+    Info  = 0,
+    Warn  = 1,
+    Debug = 2,
+    Error = 3 // always show errors
+};
+
+inline std::atomic<Level> level = Level::Info;
 
 namespace Color
 {
@@ -35,60 +46,94 @@ constexpr std::string_view BrightWhite   = "\033[97m";
 
 // ---- Core colored print ----
 
-template <typename... Args> void print(std::string_view color, std::format_string<Args...> fmt, Args&&... args)
+template <typename... Args>
+void print(std::string_view color, std::format_string<Args...> fmt, Args&&... args)
 {
     std::print("{}{}{}", color, std::format(fmt, std::forward<Args>(args)...), Color::Reset);
 }
 
-template <typename... Args> void println(std::string_view color, std::format_string<Args...> fmt, Args&&... args)
+template <typename... Args>
+void println(std::string_view color, std::format_string<Args...> fmt, Args&&... args)
 {
     std::println("{}{}{}", color, std::format(fmt, std::forward<Args>(args)...), Color::Reset);
 }
 
 // ---- Log levels ----
 
-template <typename... Args> void info(std::format_string<Args...> fmt, Args&&... args)
+template <typename... Args>
+void info(std::format_string<Args...> fmt, Args&&... args)
 {
+    if (level > Level::Info)
+        return;
+
     std::print("{}[INFO]  {}", Color::BrightCyan, Color::Reset);
     std::println("{}{}{}{}", Color::White, Color::Bold, std::format(fmt, std::forward<Args>(args)...), Color::Reset);
 }
 
-template <typename... Args> void info_t(std::format_string<Args...> fmt, Args&&... args)
+template <typename... Args>
+void info_t(std::format_string<Args...> fmt, Args&&... args)
 {
+    if (level > Level::Info)
+        return;
+
     std::println("        {}{}{}", Color::White, std::format(fmt, std::forward<Args>(args)...), Color::Reset);
 }
 
-template <typename... Args> void warn(std::format_string<Args...> fmt, Args&&... args)
+template <typename... Args>
+void warn(std::format_string<Args...> fmt, Args&&... args)
 {
+    if (level > Level::Warn)
+        return;
+
     std::print("{}[WARN]  {}", Color::BrightYellow, Color::Reset);
     std::println("{}{}{}{}", Color::Yellow, Color::Bold, std::format(fmt, std::forward<Args>(args)...), Color::Reset);
 }
 
-template <typename... Args> void warn_t(std::format_string<Args...> fmt, Args&&... args)
+template <typename... Args>
+void warn_t(std::format_string<Args...> fmt, Args&&... args)
 {
+    if (level > Level::Warn)
+        return;
+
     std::println("        {}{}{}", Color::Yellow, std::format(fmt, std::forward<Args>(args)...), Color::Reset);
 }
 
-template <typename... Args> void error(std::format_string<Args...> fmt, Args&&... args)
+template <typename... Args>
+void debug(std::format_string<Args...> fmt, Args&&... args)
 {
-    std::print("{}[ERROR] {}", Color::BrightRed, Color::Reset);
-    std::println("{}{}{}{}", Color::Red, Color::Bold, std::format(fmt, std::forward<Args>(args)...), Color::Reset);
-}
+    if (level > Level::Debug)
+        return;
 
-template <typename... Args> void error_t(std::format_string<Args...> fmt, Args&&... args)
-{
-    std::println("        {}{}{}", Color::Red, std::format(fmt, std::forward<Args>(args)...), Color::Reset);
-}
-
-template <typename... Args> void debug(std::format_string<Args...> fmt, Args&&... args)
-{
     std::print("{}[DEBUG] {}", Color::Blue, Color::Reset);
     std::println("{}{}{}{}", Color::Dim, Color::Bold, std::format(fmt, std::forward<Args>(args)...), Color::Reset);
 }
 
-template <typename... Args> void debug_t(std::format_string<Args...> fmt, Args&&... args)
+template <typename... Args>
+void debug_t(std::format_string<Args...> fmt, Args&&... args)
 {
+    if (level > Level::Debug)
+        return;
+
     std::println("        {}{}{}", Color::Dim, std::format(fmt, std::forward<Args>(args)...), Color::Reset);
+}
+
+template <typename... Args>
+void error(std::format_string<Args...> fmt, Args&&... args)
+{
+    if (level > Level::Error)
+        return;
+
+    std::print("{}[ERROR] {}", Color::BrightRed, Color::Reset);
+    std::println("{}{}{}{}", Color::Red, Color::Bold, std::format(fmt, std::forward<Args>(args)...), Color::Reset);
+}
+
+template <typename... Args>
+void error_t(std::format_string<Args...> fmt, Args&&... args)
+{
+    if (level > Level::Error)
+        return;
+
+    std::println("        {}{}{}", Color::Red, std::format(fmt, std::forward<Args>(args)...), Color::Reset);
 }
 
 } // namespace Log

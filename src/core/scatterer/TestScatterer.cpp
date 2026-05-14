@@ -6,6 +6,9 @@ void TestScatterer::scatter(Batch& batch)
     batch.for_each(
         [&batch](size_t b)
         {
+            if (batch.m[b] < 0)
+                return;
+
             auto [nx, ny, nz] = Random::direction();
             batch.nx[b]       = nx;
             batch.ny[b]       = ny;

@@ -53,8 +53,8 @@ struct Batch
         std::for_each(std::execution::par_unseq, indices.begin(), indices.end(), std::forward<F>(f));
     }
 
-    bool allAlive() const
+    bool anyAlive() const
     {
-        return std::all_of(m.begin(), m.end(), [](int mb) { return mb >= 0; });
+        return std::any_of(m.begin(), m.end(), [](int mb) { return mb >= 0; });
     }
 };

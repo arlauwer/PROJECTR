@@ -6,6 +6,8 @@
 #include <string>
 #include <vector>
 
+#define DOUBLE_PRECISION
+
 #ifdef DOUBLE_PRECISION
 using real = double;
 #define REAL_MAX DBL_MAX;

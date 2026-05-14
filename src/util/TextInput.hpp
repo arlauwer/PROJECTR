@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Config.hpp"
-#include "Log.hpp"
 #include <fstream>
 #include <sstream>
 
@@ -18,7 +17,7 @@ class TextInput
         // Resolve relative to cwd at runtime
         std::ifstream file(path);
         if (!file.is_open())
-            throw std::runtime_error("Failed to open file");
+            throw std::runtime_error("Failed to open file at " + path);
 
         string line;
         while (std::getline(file, line))
@@ -26,8 +25,6 @@ class TextInput
             if (isComment(line))
                 continue;
             std::istringstream ss(line);
-
-            Log::debug("Reading line: {}", line);
 
             // add value to each arg
             auto push = [&](auto& vec)
