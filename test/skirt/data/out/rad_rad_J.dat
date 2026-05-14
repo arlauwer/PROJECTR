@@ -1,4 +1,4 @@
 # Mean intensity per spatial cell
 # column 1: spatial cell index (1)
 # column 2: J_lambda at lambda = 1.5e-06 m (W/m3/sr)
-0 1.214910181e+04
+0 9.947070135e+02

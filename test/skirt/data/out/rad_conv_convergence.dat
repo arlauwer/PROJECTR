@@ -4,26 +4,26 @@ Spatial grid convergence information
 ------ Gas ------
 
 Total mass
-  Input:   1.3381e-32 kg
-  Gridded: 1.3381e-32 kg (-0.00 %)
+  Input:   1.3381e-25 kg
+  Gridded: 1.3381e-25 kg (0.00 %)
 
 Optical depth at 1e-06 m along full X-axis
-  Input:   2e-06
-  Gridded: 2e-06 (-0.00 %)
+  Input:   20
+  Gridded: 20 (0.00 %)
 
 Optical depth at 1e-06 m along full Y-axis
-  Input:   2e-06
-  Gridded: 2e-06 (-0.00 %)
+  Input:   20
+  Gridded: 20 (0.00 %)
 
 Optical depth at 1e-06 m along full Z-axis
-  Input:   2e-06
-  Gridded: 2e-06 (-0.00 %)
+  Input:   20
+  Gridded: 20 (0.00 %)
 
 ------ Cell statistics ------
 
 Optical depth of cell diagonal at 1e-06 m
-  Largest: 3.4641e-06
-  Average: 3.4641e-06
-  90% <  : 3.4641e-06
+  Largest: 34.641
+  Average: 34.641
+  90% <  : 34.641
 
 ------------------------------------

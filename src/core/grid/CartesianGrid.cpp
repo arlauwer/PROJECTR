@@ -154,15 +154,8 @@ void CartesianGrid::propagate(::Batch& base)
                 ry += ny * ds;
                 rz += nz * ds;
 
-                // attenuate
-                const real lum_begin = lum;
-                lum *= exp(-dtau);
-                const real lum_end = lum;
-
-                real extmean = (1 - exp(-dtau)) / dtau;
-
                 // store radiation field
-                const real Lds = dtau > epsilon ? (lum_begin - lum_end) / _kappa[m] : 0.;
+                const real Lds = lum * ds;
                 (*_radField)(m, radWavIndex) += Lds;
 
                 // don't update cell indices
