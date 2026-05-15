@@ -1,5 +1,0 @@
-# column 1: characteristic wavelength; lambda (m)
-# column 2: effective wavelength bin width; lambda (m)
-# column 3: left border of wavelength bin; lambda (m)
-# column 4: right border of wavelength bin; lambda (m)
-1.500000000e-06 1.000000000e-06 1.000000000e-06 2.000000000e-06

@@ -1,0 +1,28 @@
+15/05/2026 11:32:46.797   SKIRT v9.0 (git d762d4b-dirty built on 14/05/2026 at 14:30:50)
+15/05/2026 11:32:46.797   Running on work-arch for arno
+15/05/2026 11:32:46.797   Starting simulation rad using 22 threads and a single process...
+15/05/2026 11:32:46.797   Starting setup...
+15/05/2026 11:32:46.797     Panchromatic wavelength regime
+15/05/2026 11:32:46.797     With transfer medium
+15/05/2026 11:32:46.797     Model and grid symmetry: 3D
+15/05/2026 11:32:46.797     Photon life cycle: no explicit absorption; with forced scattering
+15/05/2026 11:32:46.797   FileSED reads spectral energy distribution from text file /home/arno/Documents/code/PROJECTR/test/skirt/data/multi/in/sed.txt...
+15/05/2026 11:32:46.797     Column 1: wavelength <-- wavelength (m)
+15/05/2026 11:32:46.797     Column 2: specific luminosity <-- specificLuminosity (W/m)
+15/05/2026 11:32:46.797   Done reading
+15/05/2026 11:32:46.798   MediumSystem allocated 0.852 KB of memory
+15/05/2026 11:32:46.798   Calculating medium properties for 27 cells...
+15/05/2026 11:32:46.802   Done calculating medium properties
+15/05/2026 11:32:46.802 - Finished setup in 0.0 s.
+15/05/2026 11:32:46.802   Starting setup output...
+15/05/2026 11:32:46.802 - Finished setup output in 0.0 s.
+15/05/2026 11:32:46.802   Starting the run...
+15/05/2026 11:32:46.802   Starting primary emission...
+15/05/2026 11:32:46.802   Launching 1e6 primary emission photon packets
+15/05/2026 11:32:47.779 - Finished primary emission in 1.0 s.
+15/05/2026 11:32:47.779 - Finished the run in 1.0 s.
+15/05/2026 11:32:47.779   Starting final output...
+15/05/2026 11:32:47.780   RadiationFieldProbe rad wrote mean intensity per spatial cell to /home/arno/Documents/code/PROJECTR/test/skirt/data/multi/out/rad_rad_J.dat
+15/05/2026 11:32:47.780 - Finished final output in 0.0 s.
+15/05/2026 11:32:47.780 - Finished simulation rad using 22 threads and a single process in 1.0 s.
+15/05/2026 11:32:47.780   Available memory: 30.8 GB -- Peak memory usage: 8.11 MB (0.0%)

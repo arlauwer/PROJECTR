@@ -1,5 +1,3 @@
-// test_main.cpp
-
 #include "Log.hpp"
 #include <gtest/gtest.h>
 

@@ -48,10 +48,10 @@
                             <UniformBoxGeometry minX="-1 m" maxX="1 m" minY="-1 m" maxY="1 m" minZ="-1 m" maxZ="1 m"/>
                         </geometry>
                         <materialMix type="MaterialMix">
-                            <TrivialGasMix absorptionCrossSection="1 m2" scatteringCrossSection="0 m2" asymmetryParameter="0"/>
+                            <TrivialGasMix absorptionCrossSection="1 m2" scatteringCrossSection="1 m2" asymmetryParameter="0"/>
                         </materialMix>
                         <normalization type="MaterialNormalization">
-                            <OpticalDepthMaterialNormalization axis="Z" wavelength="1e-6 m" opticalDepth="20"/>
+                            <OpticalDepthMaterialNormalization axis="Z" wavelength="1e-6 m" opticalDepth="4"/>
                         </normalization>
                     </GeometricMedium>
                 </media>
@@ -83,8 +83,7 @@
             <ProbeSystem>
 
                 <probes type="Probe">
-                    <ConvergenceInfoProbe probeName="conv" wavelength="1e-6 m" probeAfter="Setup"/>
-                    <RadiationFieldProbe probeName="rad" writeWavelengthGrid="true" probeAfter="Run">
+                    <RadiationFieldProbe probeName="rad" writeWavelengthGrid="false" probeAfter="Run">
                         <form type="Form">
                             <PerCellForm/>
                         </form>

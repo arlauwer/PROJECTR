@@ -15,7 +15,7 @@ file(GLOB_RECURSE SOURCES "*.cpp")
 add_executable(${TARGET} ${SOURCES})
 
 target_link_libraries(${TARGET} GTest::gtest_main util vulkan core)
-target_include_directories(${TARGET} PRIVATE ../src/util ../src/vulkan ../src/core)
+target_include_directories(${TARGET} PRIVATE ../src/util ../src/vulkan ../src/core ../test/core)
 
 include(GoogleTest)
 gtest_discover_tests(${TARGET})
