@@ -5,7 +5,7 @@
 #include "Random.hpp"
 #include "TextInput.hpp"
 #include "launcher/PointLauncher.hpp"
-#include "scatterer/TestScatterer.hpp"
+#include "scatterer/IsotropicScatterer.hpp"
 #include <gtest/gtest.h>
 
 #define SKIRT_DIR TEST_DIR "skirt/data/"
@@ -53,7 +53,7 @@ TEST(SKIRT, SKIRTScatter)
 
     sim.setGrid(std::make_unique<CartesianGrid>(-1, 1, 1, radBorders));
     sim.setLauncher(std::make_unique<PointLauncher>(SKIRT_DIR "scatter/in/sed.txt"));
-    sim.setScatterer(std::make_unique<TestScatterer>());
+    sim.setScatterer(std::make_unique<IsotropicScatterer>());
 
     auto& grid = sim.grid();
     Math::fill(grid.kappa(), 2.);
@@ -86,7 +86,7 @@ TEST(SKIRT, SKIRTMulti)
 
     sim.setGrid(std::make_unique<CartesianGrid>(-1, 1, 3, radBorders));
     sim.setLauncher(std::make_unique<PointLauncher>(SKIRT_DIR "multi/in/sed.txt"));
-    sim.setScatterer(std::make_unique<TestScatterer>());
+    sim.setScatterer(std::make_unique<IsotropicScatterer>());
 
     auto& grid = sim.grid();
     Math::fill(grid.kappa(), 2.);

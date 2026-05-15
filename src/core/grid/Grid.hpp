@@ -11,8 +11,9 @@ class Grid
 
     virtual unique_ptr<Batch> createBatch(size_t size) = 0;
 
-    virtual void initialize(Batch& batch) = 0;
-    virtual void propagate(Batch& batch)  = 0;
+    virtual void launch(Batch& batch) = 0;
+
+    virtual void propagate(Batch& batch) = 0;
 
     virtual real volume(int m) const = 0;
 

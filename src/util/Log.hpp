@@ -136,4 +136,13 @@ void error_t(std::format_string<Args...> fmt, Args&&... args)
     std::println("        {}{}{}", Color::Red, std::format(fmt, std::forward<Args>(args)...), Color::Reset);
 }
 
+template <typename... Args>
+[[noreturn]] void fatal(std::format_string<Args...> fmt, Args&&... args)
+{
+    std::string msg = std::format(fmt, std::forward<Args>(args)...);
+    std::print("{}[FATAL] {}", Color::BrightRed, Color::Reset);
+    std::println("{}{}{}{}", Color::Red, Color::Bold, msg, Color::Reset);
+    throw std::runtime_error(msg);
+}
+
 } // namespace Log

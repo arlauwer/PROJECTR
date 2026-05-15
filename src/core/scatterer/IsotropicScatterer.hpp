@@ -2,7 +2,7 @@
 
 #include "Scatterer.hpp"
 
-class TestScatterer : public Scatterer
+class IsotropicScatterer : public Scatterer
 {
   public:
     void scatter(Batch& batch) override;

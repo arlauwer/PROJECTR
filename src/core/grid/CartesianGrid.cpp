@@ -61,7 +61,7 @@ unique_ptr<::Batch> CartesianGrid::createBatch(size_t size)
 }
 
 // batch functions
-void CartesianGrid::initialize(::Batch& base)
+void CartesianGrid::launch(::Batch& base)
 {
     Batch& batch = static_cast<Batch&>(base);
 

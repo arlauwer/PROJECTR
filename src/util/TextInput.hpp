@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Config.hpp"
+#include "Log.hpp"
 #include <fstream>
 #include <sstream>
 
@@ -17,7 +18,7 @@ class TextInput
         // Resolve relative to cwd at runtime
         std::ifstream file(path);
         if (!file.is_open())
-            throw std::runtime_error("Failed to open file at " + path);
+            Log::fatal("Failed to open file at: {}", path);
 
         string line;
         while (std::getline(file, line))
@@ -33,7 +34,7 @@ class TextInput
                 if (ss >> value)
                     vec.push_back(value);
                 else
-                    throw std::runtime_error("Requested more columns than available");
+                    Log::fatal("Requested more columns than available for file: {}", path);
             };
 
             (push(args), ...);

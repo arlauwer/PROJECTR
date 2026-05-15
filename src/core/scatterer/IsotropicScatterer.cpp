@@ -1,7 +1,7 @@
-#include "TestScatterer.hpp"
+#include "IsotropicScatterer.hpp"
 #include "Random.hpp"
 
-void TestScatterer::scatter(Batch& batch)
+void IsotropicScatterer::scatter(Batch& batch)
 {
     batch.for_each(
         [&batch](size_t b)

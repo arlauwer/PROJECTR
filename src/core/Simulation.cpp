@@ -1,7 +1,10 @@
 #include "Simulation.hpp"
-#include "Log.hpp"
+#include "Config.hpp"
+#include "batch/Batch.hpp"
+#include "batch/BatchField.hpp"
 #include "launcher/Launcher.hpp"
 #include "scatterer/Scatterer.hpp"
+#include <memory>
 
 Simulation::Simulation(size_t batch_size, size_t batch_count)
     : _batch_size(batch_size),
@@ -11,14 +14,37 @@ Simulation::Simulation(size_t batch_size, size_t batch_count)
 
 void Simulation::setup()
 {
+    // grid
     if (!_grid.get())
-        throw std::runtime_error("Grid not set");
+        Log::fatal("Grid not set");
 
-    if (!_launcher.get())
-        throw std::runtime_error("Launcher not set");
+    // launchers
+    BatchField required =
+        BatchField::Position | BatchField::Direction | BatchField::Luminosity | BatchField::Wavelength;
 
+    for (auto& launcher : _launchers)
+    {
+        BatchField provided = launcher->provides();
+
+        // if provided present in required
+        if ((required & provided) != BatchField::None)
+        {
+            required &= ~provided; // remove provided from required
+        }
+        else
+        {
+            // either not required or duplcate
+            Log::fatal("Launchers provided unrequired/duplicate field: {}", to_string(provided));
+        }
+    }
+    if (required != BatchField::None)
+    {
+        Log::fatal("Launchers missing required field: {}", to_string(required));
+    }
+
+    // scatterer
     if (!_scatterer.get())
-        throw std::runtime_error("Scatterer not set");
+        Log::fatal("Scatterer not set");
 
     _batch = _grid->createBatch(_batch_size);
     Log::info("Simulation setup finished");
@@ -29,8 +55,10 @@ void Simulation::run()
     for (size_t B = 0; B < _batch_count; B++)
     {
         // photon loop
-        _launcher->launch(*_batch);
-        _grid->initialize(*_batch);
+        for (auto& launcher : _launchers)
+            launcher->launch(*_batch);
+
+        _grid->launch(*_batch);
 
         while (_batch->anyAlive())
         {
@@ -44,43 +72,4 @@ void Simulation::run()
 void Simulation::finalize()
 {
     _grid->finalize();
-}
-
-void Simulation::setGrid(unique_ptr<Grid> grid)
-{
-    if (!_grid.get())
-        _grid = std::move(grid);
-    else
-        throw std::runtime_error("Grid already set");
-}
-
-void Simulation::setLauncher(unique_ptr<Launcher> launcher)
-{
-    if (!_launcher.get())
-        _launcher = std::move(launcher);
-    else
-        throw std::runtime_error("Launcher already set");
-}
-
-void Simulation::setScatterer(unique_ptr<Scatterer> scatterer)
-{
-    if (!_scatterer.get())
-        _scatterer = std::move(scatterer);
-    else
-        throw std::runtime_error("Scatterer already set");
-}
-
-Grid& Simulation::grid()
-{
-    return *_grid;
-}
-
-Launcher& Simulation::launcher()
-{
-    return *_launcher;
-}
-
-Scatterer& Simulation::scatterer()
-{
-    return *_scatterer;
 }

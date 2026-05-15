@@ -1,7 +1,9 @@
 #pragma once
 
+#include "Log.hpp"
 #include "batch/Batch.hpp"
 #include "grid/Grid.hpp"
+#include <concepts>
 
 class Launcher;
 class Scatterer;
@@ -19,21 +21,35 @@ class Simulation
 
     void finalize();
 
-    void setGrid(unique_ptr<Grid> grid);
+    template <std::derived_from<Grid> T, typename... Args>
+    void setGrid(Args&&... args)
+    {
+        if (!_grid.get())
+            _grid = std::make_unique<T>(std::forward<Args>(args)...);
+        else
+            Log::fatal("Grid already set");
+    }
 
-    void setLauncher(unique_ptr<Launcher> launcher);
+    template <std::derived_from<Launcher> T, typename... Args>
+    void addLauncher(Args&&... args)
+    {
+        _launchers.push_back(std::make_unique<T>(std::forward<Args>(args)...));
+    }
 
-    void setScatterer(unique_ptr<Scatterer> scatterer);
-
-    Grid& grid();
-
-    Launcher& launcher();
-
-    Scatterer& scatterer();
+    template <std::derived_from<Scatterer> T, typename... Args>
+    void setScatterer(Args&&... args)
+    {
+        if (!_scatterer.get())
+            _scatterer = std::make_unique<T>(std::forward<Args>(args)...);
+        else
+            Log::fatal("Scatterer already set");
+    }
 
   private:
-    unique_ptr<Grid>      _grid;
-    unique_ptr<Launcher>  _launcher;
+    unique_ptr<Grid> _grid;
+
+    vector<unique_ptr<Launcher>> _launchers;
+
     unique_ptr<Scatterer> _scatterer;
 
     unique_ptr<Batch> _batch;
