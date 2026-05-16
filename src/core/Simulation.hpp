@@ -46,6 +46,12 @@ class Simulation
     }
 
   private:
+    void checkGrid();
+
+    void checkLaunchers();
+
+    void checkScatterer();
+
     unique_ptr<Grid> _grid;
 
     vector<unique_ptr<Launcher>> _launchers;

@@ -1,13 +1,11 @@
 #pragma once
 
-#include "Scatterer.hpp"
+#include "Launcher.hpp"
 
-class IsotropicScatterer : public Scatterer
+class IsotropicLauncher : public Launcher
 {
   public:
     void launch(Batch& batch) override;
-
-    void scatter(Batch& batch) override;
 
     Capabilities provides() const override;
 };

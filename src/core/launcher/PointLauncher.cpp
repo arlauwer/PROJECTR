@@ -1,4 +1,5 @@
 #include "PointLauncher.hpp"
+#include "Launcher.hpp"
 
 PointLauncher::PointLauncher(real x, real y, real z)
     : _x(x),
@@ -19,7 +20,7 @@ void PointLauncher::launch(Batch& batch)
     );
 }
 
-BatchField PointLauncher::provides() const
+Launcher::Capabilities PointLauncher::provides() const
 {
-    return BatchField::Position;
+    return Capabilities::Position;
 }

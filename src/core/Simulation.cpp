@@ -1,7 +1,6 @@
 #include "Simulation.hpp"
 #include "Config.hpp"
 #include "batch/Batch.hpp"
-#include "batch/BatchField.hpp"
 #include "launcher/Launcher.hpp"
 #include "scatterer/Scatterer.hpp"
 #include <memory>
@@ -14,37 +13,9 @@ Simulation::Simulation(size_t batch_size, size_t batch_count)
 
 void Simulation::setup()
 {
-    // grid
-    if (!_grid.get())
-        Log::fatal("Grid not set");
-
-    // launchers
-    BatchField required =
-        BatchField::Position | BatchField::Direction | BatchField::Luminosity | BatchField::Wavelength;
-
-    for (auto& launcher : _launchers)
-    {
-        BatchField provided = launcher->provides();
-
-        // if provided present in required
-        if ((required & provided) != BatchField::None)
-        {
-            required &= ~provided; // remove provided from required
-        }
-        else
-        {
-            // either not required or duplcate
-            Log::fatal("Launchers provided unrequired/duplicate field: {}", to_string(provided));
-        }
-    }
-    if (required != BatchField::None)
-    {
-        Log::fatal("Launchers missing required field: {}", to_string(required));
-    }
-
-    // scatterer
-    if (!_scatterer.get())
-        Log::fatal("Scatterer not set");
+    checkGrid();
+    checkLaunchers();
+    checkScatterer();
 
     _batch = _grid->createBatch(_batch_size);
     Log::info("Simulation setup finished");
@@ -72,4 +43,48 @@ void Simulation::run()
 void Simulation::finalize()
 {
     _grid->finalize();
+}
+
+void Simulation::checkGrid()
+{
+    if (!_grid.get())
+        Log::fatal("Grid not set");
+}
+
+void Simulation::checkLaunchers()
+{
+    auto required = Launcher::Capabilities::All;
+
+    for (auto& launcher : _launchers)
+    {
+        auto provided = launcher->provides();
+
+        // if provided (exactly) present in required
+        if ((required & provided) == provided)
+        {
+            required &= ~provided; // remove provided from required
+        }
+        else
+        {
+            // either not required or duplcate
+            Log::fatal("Launcher provided unrequired/duplicate field: {}", Launcher::to_string(provided));
+        }
+    }
+    if (required != Launcher::Capabilities::None)
+    {
+        Log::fatal("Launchers missing required field: {}", Launcher::to_string(required));
+    }
+}
+
+void Simulation::checkScatterer()
+{
+    if (!_scatterer.get())
+        Log::fatal("Scatterer not set");
+
+    auto required = Scatterer::Capabilities::All;
+    auto provided = _scatterer->provides();
+    if (required != provided)
+    {
+        Log::fatal("Scatterer provided unrequired/duplicate field: {}", Scatterer::to_string(provided));
+    }
 }

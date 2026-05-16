@@ -1,16 +1,17 @@
 #pragma once
 
 #include "Launcher.hpp"
+#include "SED.hpp"
 
-class PointLauncher : public Launcher
+class SEDLauncher : public Launcher
 {
   public:
-    PointLauncher(real x, real y, real z);
+    SEDLauncher(const string& filepath);
 
     void launch(Batch& batch) override;
 
     Capabilities provides() const override;
 
   private:
-    real _x, _y, _z;
+    SED _sed;
 };
