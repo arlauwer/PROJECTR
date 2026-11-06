@@ -1,6 +1,6 @@
 #include "FitsImage.hpp"
+#include "Log.hpp"
 #include "fitsio/fitsio.h"
-#include <stdexcept>
 
 namespace
 {
@@ -11,7 +11,7 @@ void check(int status, const string& filepath, const string& action)
         return;
     char message[FLEN_STATUS];
     ffgerr(status, message);
-    throw std::runtime_error("Error " + action + " FITS file " + filepath + ": " + message);
+    Log::fatal("Error {} FITS file {}: {}", action, filepath, message);
 }
 
 } // namespace

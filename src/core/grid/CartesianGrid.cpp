@@ -60,7 +60,7 @@ unique_ptr<::Batch> CartesianGrid::createBatch(size_t size)
 }
 
 // batch functions
-void CartesianGrid::initialize(::Batch& base)
+void CartesianGrid::launch(::Batch& base)
 {
     Batch& batch = static_cast<Batch&>(base);
 
@@ -93,7 +93,7 @@ void CartesianGrid::propagate(::Batch& base)
         {
             constexpr real epsilon = 1e-15;
 
-            real&       weight = batch.luminosity[b];
+            real&       lum    = batch.luminosity[b];
             const real& lambda = batch.lambda[b];
             real&       accum  = batch.accum[b];
             real&       target = batch.target[b];
@@ -133,13 +133,14 @@ void CartesianGrid::propagate(::Batch& base)
                 real       ds = std::min({sx, sy, sz});
 
                 // determine if interacts
-                const real dtau       = _kappa[m] * ds;
+                real       dtau       = ds * _kappa[m];
                 const real accum_next = accum + dtau;
                 const bool interacts  = accum_next > target;
                 if (interacts)
                 {
                     // distance to interaction
                     ds    = (target - accum) / _kappa[m];
+                    dtau  = target - accum;
                     accum = target;
                 }
                 else
@@ -152,18 +153,17 @@ void CartesianGrid::propagate(::Batch& base)
                 ry += ny * ds;
                 rz += nz * ds;
 
-                // attenuate
-                const real L_begin = weight / lambda;
-                weight *= exp(-dtau);
-                const real L_end = weight / lambda;
-
                 // store radiation field
-                const real Lds = dtau > epsilon ? (L_begin - L_end) / _kappa[m] : 0.;
+                const real Lds = lum * ds;
                 (*_radField)(m, radWavIndex) += Lds;
 
                 // don't update cell indices
                 if (interacts)
+                {
+                    if (Random::uniform() > _albedo[m])
+                        m = -1;
                     break;
+                }
 
                 // update cell indices
                 if (sx <= sy && sx <= sz)

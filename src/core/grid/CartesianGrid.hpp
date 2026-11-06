@@ -40,7 +40,7 @@ class CartesianGrid : public Grid
 
     // batch functions
     unique_ptr<::Batch> createBatch(size_t size) override;
-    void                initialize(::Batch& batch) override;
+    void                launch(::Batch& batch) override;
     void                propagate(::Batch& batch) override;
 
     real volume(int m) const override;

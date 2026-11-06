@@ -1,0 +1,4 @@
+# Column 1: wavelength (m)
+# Column 2: specificLuminosity (W/m)
+1e-6	3
+3e-6	1

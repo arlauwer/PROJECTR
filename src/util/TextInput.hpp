@@ -18,7 +18,7 @@ class TextInput
         // Resolve relative to cwd at runtime
         std::ifstream file(path);
         if (!file.is_open())
-            throw std::runtime_error("Failed to open file");
+            Log::fatal("Failed to open file at: {}", path);
 
         string line;
         while (std::getline(file, line))
@@ -27,8 +27,6 @@ class TextInput
                 continue;
             std::istringstream ss(line);
 
-            Log::debug("Reading line: {}", line);
-
             // add value to each arg
             auto push = [&](auto& vec)
             {
@@ -36,7 +34,7 @@ class TextInput
                 if (ss >> value)
                     vec.push_back(value);
                 else
-                    throw std::runtime_error("Requested more columns than available");
+                    Log::fatal("Requested more columns than available for file: {}", path);
             };
 
             (push(args), ...);

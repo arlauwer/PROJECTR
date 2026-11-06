@@ -1,8 +1,10 @@
 #include "PointLauncher.hpp"
 #include "util/Random.hpp"
 
-PointLauncher::PointLauncher(const string& filepath)
-    : Launcher(SED(filepath))
+PointLauncher::PointLauncher(real x, real y, real z)
+    : _x(x),
+      _y(y),
+      _z(z)
 {
 }
 
@@ -11,20 +13,14 @@ void PointLauncher::launch(Batch& batch)
     batch.for_each(
         [this, &batch](size_t b)
         {
-            batch.luminosity[b] = 1. / (real)batch.size;
-            batch.lambda[b]     = _sed.sample();
-
-            batch.accum[b]  = 0.0;
-            batch.target[b] = Random::exponential(1.0);
-
-            batch.rx[b] = 0.;
-            batch.ry[b] = 0.;
-            batch.rz[b] = 0.;
-
-            auto [nx, ny, nz] = Random::direction();
-            batch.nx[b]       = nx;
-            batch.ny[b]       = ny;
-            batch.nz[b]       = nz;
+            batch.rx[b] = _x;
+            batch.ry[b] = _y;
+            batch.rz[b] = _z;
         }
     );
+}
+
+Launcher::Capabilities PointLauncher::provides() const
+{
+    return Capabilities::Position;
 }
