@@ -1,6 +1,6 @@
 #include "CartesianGrid.hpp"
-#include "FitsImage.hpp"
-#include "Math.hpp"
+#include "util/FitsImage.hpp"
+#include "util/Math.hpp"
 #include <cmath>
 #include <cstddef>
 

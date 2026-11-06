@@ -1,10 +1,8 @@
 set(TARGET util)
 
-file(GLOB_RECURSE SOURCES "*.cpp")
-file(GLOB_RECURSE HEADERS "*.hpp")
+file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS "*.cpp")
+add_library(${TARGET} ${SOURCES})
 
-add_library(${TARGET} STATIC ${SOURCES} ${HEADERS})
-
-# propagate includes to other targets
-target_link_libraries(${TARGET} fitsio)
-target_include_directories(${TARGET} PUBLIC ${CMAKE_SOURCE_DIR}/external)
+target_link_root(${TARGET} src)
+target_link_root(${TARGET} external pcg)                  # Random.hpp exposes pcg
+target_link_root(${TARGET} external SCOPE PRIVATE fitsio) # only used in FitsImage.cpp

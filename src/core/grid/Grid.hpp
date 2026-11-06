@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../batch/Batch.hpp"
-#include "Config.hpp"
-#include "RadiationField.hpp"
+#include "core/batch/Batch.hpp"
+#include "core/grid/RadiationField.hpp"
+#include "util/Config.hpp"
 
 class Grid
 {
@@ -20,20 +20,11 @@ class Grid
 
     void finalize();
 
-    vector<real>& kappa()
-    {
-        return _kappa;
-    }
+    vector<real>& kappa() { return _kappa; }
 
-    vector<real>& albedo()
-    {
-        return _albedo;
-    }
+    vector<real>& albedo() { return _albedo; }
 
-    RadiationField& radiationField()
-    {
-        return *_radField;
-    }
+    RadiationField& radiationField() { return *_radField; }
 
   protected:
     vector<real>                  _kappa;

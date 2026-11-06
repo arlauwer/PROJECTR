@@ -2,11 +2,8 @@ set(TARGET vulkan)
 
 find_package(Vulkan REQUIRED)
 
-file(GLOB SOURCES "*.cpp")
-file(GLOB HEADERS "*.hpp")
+file(GLOB SOURCES CONFIGURE_DEPENDS "*.cpp")
+add_library(${TARGET} ${SOURCES})
 
-add_library(${TARGET} STATIC ${SOURCES} ${HEADERS})
-
-target_link_libraries(${TARGET} Vulkan::Vulkan util)
-target_include_directories(${TARGET} PRIVATE ../util)
-
+# PUBLIC: VulkanContext.hpp includes Vulkan headers
+target_link_root(${TARGET} src util Vulkan::Vulkan)

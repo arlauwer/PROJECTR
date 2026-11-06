@@ -1,4 +1,4 @@
-#include "Random.hpp"
+#include "util/Random.hpp"
 #include <gtest/gtest.h>
 
 TEST(Random, DirectionIsIsotropic)

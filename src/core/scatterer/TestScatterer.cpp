@@ -1,5 +1,5 @@
 #include "TestScatterer.hpp"
-#include "Random.hpp"
+#include "util/Random.hpp"
 
 void TestScatterer::scatter(Batch& batch)
 {

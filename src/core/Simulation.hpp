@@ -1,7 +1,7 @@
 #pragma once
 
-#include "batch/Batch.hpp"
-#include "grid/Grid.hpp"
+#include "core/batch/Batch.hpp"
+#include "core/grid/Grid.hpp"
 
 class Launcher;
 class Scatterer;

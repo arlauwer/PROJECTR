@@ -1,5 +1,5 @@
 #include "PointLauncher.hpp"
-#include "Random.hpp"
+#include "util/Random.hpp"
 
 PointLauncher::PointLauncher(const string& filepath)
     : Launcher(SED(filepath))

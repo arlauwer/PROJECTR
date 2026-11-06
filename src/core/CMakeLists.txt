@@ -1,13 +1,9 @@
 set(TARGET core)
 
-file(GLOB_RECURSE SOURCES "*.cpp")
-file(GLOB_RECURSE HEADERS "*.hpp")
-
 find_package(TBB REQUIRED)
 
-add_library(${TARGET} STATIC ${SOURCES} ${HEADERS})
+file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS "*.cpp")
+add_library(${TARGET} ${SOURCES})
 
-target_link_libraries(${TARGET} TBB::tbb)
-
-target_link_libraries(${TARGET} util vulkan)
-target_include_directories(${TARGET} PRIVATE ../util ../vulkan)
+# PUBLIC: TBB is needed by Batch::for_each, a template in a header
+target_link_root(${TARGET} src util vulkan TBB::tbb)

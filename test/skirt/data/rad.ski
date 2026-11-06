@@ -48,7 +48,7 @@
                             <PlummerGeometry scaleLength="1 m"/>
                         </geometry>
                         <materialMix type="MaterialMix">
-                            <TestMix/>
+                            <TrivialGasMix absorptionCrossSection="1 m2" scatteringCrossSection="0 m2" asymmetryParameter="0"/>
                         </materialMix>
                         <normalization type="MaterialNormalization">
                             <OpticalDepthMaterialNormalization axis="Z" wavelength="1e-6 m" opticalDepth="2"/>

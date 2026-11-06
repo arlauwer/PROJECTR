@@ -1,7 +1,7 @@
-#include "../core/Simulation.hpp"
-#include "../core/grid/CartesianGrid.hpp"
-#include "../core/launcher/PointLauncher.hpp"
-#include "../core/scatterer/TestScatterer.hpp"
+#include "core/Simulation.hpp"
+#include "core/grid/CartesianGrid.hpp"
+#include "core/launcher/PointLauncher.hpp"
+#include "core/scatterer/TestScatterer.hpp"
 
 int main()
 {

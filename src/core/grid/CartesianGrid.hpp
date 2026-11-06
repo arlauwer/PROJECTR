@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../batch/Batch.hpp"
-#include "../grid/Grid.hpp"
-#include "Config.hpp"
+#include "core/batch/Batch.hpp"
+#include "core/grid/Grid.hpp"
+#include "util/Config.hpp"
 
 class CartesianGrid : public Grid
 {

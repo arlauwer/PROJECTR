@@ -1,7 +1,7 @@
 #include "SED.hpp"
-#include "Math.hpp"
-#include "Random.hpp"
-#include "TextInput.hpp"
+#include "util/Math.hpp"
+#include "util/Random.hpp"
+#include "util/TextInput.hpp"
 #include <cmath>
 
 namespace

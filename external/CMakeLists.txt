@@ -1,2 +1,2 @@
 add_subdirectory(fitsio)
-# add_subdirectory(pcg)
+add_subdirectory(pcg)

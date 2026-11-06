@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Config.hpp"
+#include "util/Config.hpp"
 
 struct SED
 {
@@ -11,10 +11,7 @@ struct SED
 
     real sample() const;
 
-    real luminosity() const
-    {
-        return _luminosity;
-    }
+    real luminosity() const { return _luminosity; }
 
   private:
     vector<real> _wav;        // wavelengths (N) [m]

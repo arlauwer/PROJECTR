@@ -1,5 +1,5 @@
-#include "Config.hpp"
-#include "launcher/SED.hpp"
+#include "util/Config.hpp"
+#include "core/launcher/SED.hpp"
 #include <cmath>
 #include <gtest/gtest.h>
 

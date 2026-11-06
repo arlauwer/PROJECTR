@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Config.hpp"
+#include "util/Config.hpp"
 
 #include <algorithm>
 #include <cstddef>

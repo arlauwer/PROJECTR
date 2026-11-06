@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Config.hpp"
-#include "Math.hpp"
-#include "WavGrid.hpp"
+#include "util/Config.hpp"
+#include "util/Math.hpp"
+#include "util/WavGrid.hpp"
 #include <atomic>
 
 struct RadiationField

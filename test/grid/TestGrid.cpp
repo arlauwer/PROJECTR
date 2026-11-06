@@ -1,6 +1,6 @@
-#include "Config.hpp"
-#include "Random.hpp"
-#include "grid/CartesianGrid.hpp"
+#include "util/Config.hpp"
+#include "util/Random.hpp"
+#include "core/grid/CartesianGrid.hpp"
 #include <cmath>
 #include <gtest/gtest.h>
 #include <memory>

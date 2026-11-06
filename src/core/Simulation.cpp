@@ -1,7 +1,7 @@
 #include "Simulation.hpp"
-#include "Log.hpp"
-#include "launcher/Launcher.hpp"
-#include "scatterer/Scatterer.hpp"
+#include "util/Log.hpp"
+#include "core/launcher/Launcher.hpp"
+#include "core/scatterer/Scatterer.hpp"
 
 Simulation::Simulation(size_t batch_size, size_t batch_count)
     : _batch_size(batch_size),

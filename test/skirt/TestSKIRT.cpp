@@ -1,9 +1,9 @@
-#include "../core/Simulation.hpp"
-#include "../core/grid/CartesianGrid.hpp"
-#include "../core/launcher/PointLauncher.hpp"
-#include "../core/scatterer/TestScatterer.hpp"
-#include "Random.hpp"
-#include "TextInput.hpp"
+#include "core/Simulation.hpp"
+#include "core/grid/CartesianGrid.hpp"
+#include "core/launcher/PointLauncher.hpp"
+#include "core/scatterer/TestScatterer.hpp"
+#include "util/Random.hpp"
+#include "util/TextInput.hpp"
 #include <gtest/gtest.h>
 
 TEST(SKIRT, CompareToSKIRT)

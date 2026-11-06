@@ -1,4 +1,4 @@
-set(TARGET test)
+set(TARGET tests) # "test" is reserved by CTest
 
 include(FetchContent)
 FetchContent_Declare(
@@ -8,18 +8,14 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(googletest)
 
-enable_testing()
-
-file(GLOB_RECURSE SOURCES "*.cpp")
-
+file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS "*.cpp")
 add_executable(${TARGET} ${SOURCES})
 
-target_link_libraries(${TARGET} GTest::gtest_main util vulkan core)
-target_include_directories(${TARGET} PRIVATE ../src/util ../src/vulkan ../src/core)
-
-include(GoogleTest)
-gtest_discover_tests(${TARGET})
+target_link_root(${TARGET} src core GTest::gtest_main)
 
 target_compile_definitions(${TARGET} PRIVATE
     TEST_DIR="${CMAKE_CURRENT_SOURCE_DIR}/"
 )
+
+include(GoogleTest)
+gtest_discover_tests(${TARGET})
