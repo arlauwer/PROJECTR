@@ -11,7 +11,7 @@ FetchContent_MakeAvailable(googletest)
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS "*.cpp")
 add_executable(${TARGET} ${SOURCES})
 
-target_link_root(${TARGET} src core GTest::gtest_main)
+target_link_root(${TARGET} src core GTest::gtest)
 
 target_compile_definitions(${TARGET} PRIVATE
     TEST_DIR="${CMAKE_CURRENT_SOURCE_DIR}/"

@@ -2,6 +2,9 @@
 
 #include "core/batch/Batch.hpp"
 #include "core/grid/Grid.hpp"
+#include "util/Log.hpp"
+
+#include <concepts>
 
 class Launcher;
 class Scatterer;
@@ -42,6 +45,8 @@ class Simulation
         else
             Log::fatal("Scatterer already set");
     }
+
+    Grid& grid() { return *_grid; }
 
   private:
     void checkGrid();

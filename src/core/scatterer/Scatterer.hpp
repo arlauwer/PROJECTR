@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/batch/Batch.hpp"
+#include "core/batch/Bitmask.hpp"
 
 class Scatterer
 {

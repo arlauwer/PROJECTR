@@ -1,7 +1,9 @@
 #include "core/Simulation.hpp"
 #include "core/grid/CartesianGrid.hpp"
+#include "core/launcher/IsotropicLauncher.hpp"
 #include "core/launcher/PointLauncher.hpp"
-#include "core/scatterer/TestScatterer.hpp"
+#include "core/launcher/SEDLauncher.hpp"
+#include "core/scatterer/IsotropicScatterer.hpp"
 
 int main()
 {

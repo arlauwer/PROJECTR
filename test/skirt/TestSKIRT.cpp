@@ -1,9 +1,14 @@
 #include "core/Simulation.hpp"
 #include "core/grid/CartesianGrid.hpp"
+#include "core/launcher/IsotropicLauncher.hpp"
 #include "core/launcher/PointLauncher.hpp"
-#include "core/scatterer/TestScatterer.hpp"
+#include "core/launcher/SEDLauncher.hpp"
+#include "core/scatterer/IsotropicScatterer.hpp"
+#include "core/scatterer/NoScatterer.hpp"
+#include "util/Math.hpp"
 #include "util/Random.hpp"
 #include "util/TextInput.hpp"
+#include "../core/test.hpp"
 #include <gtest/gtest.h>
 
 #define SKIRT_DIR TEST_DIR "skirt/data/"
@@ -16,9 +21,11 @@ TEST(SKIRT, SKIRTSingle)
 
     const vector<real> radBorders = {1e-6, 2e-6};
 
-    sim.setGrid(std::make_unique<CartesianGrid>(-1, 1, 1, radBorders));
-    sim.setLauncher(std::make_unique<PointLauncher>(SKIRT_DIR "single/in/sed.txt"));
-    sim.setScatterer(std::make_unique<NoScatterer>());
+    sim.setGrid<CartesianGrid>(-1, 1, 1, radBorders);
+    sim.addLauncher<PointLauncher>(0., 0., 0.);
+    sim.addLauncher<IsotropicLauncher>();
+    sim.addLauncher<SEDLauncher>(SKIRT_DIR "single/in/sed.txt");
+    sim.setScatterer<NoScatterer>();
 
     auto& grid = sim.grid();
     Math::fill(grid.kappa(), 10.);
@@ -49,9 +56,11 @@ TEST(SKIRT, SKIRTScatter)
 
     const vector<real> radBorders = {1e-6, 2e-6};
 
-    sim.setGrid(std::make_unique<CartesianGrid>(-1, 1, 1, radBorders));
-    sim.setLauncher(std::make_unique<PointLauncher>(SKIRT_DIR "scatter/in/sed.txt"));
-    sim.setScatterer(std::make_unique<IsotropicScatterer>());
+    sim.setGrid<CartesianGrid>(-1, 1, 1, radBorders);
+    sim.addLauncher<PointLauncher>(0., 0., 0.);
+    sim.addLauncher<IsotropicLauncher>();
+    sim.addLauncher<SEDLauncher>(SKIRT_DIR "scatter/in/sed.txt");
+    sim.setScatterer<IsotropicScatterer>();
 
     auto& grid = sim.grid();
     Math::fill(grid.kappa(), 2.);
@@ -82,9 +91,11 @@ TEST(SKIRT, SKIRTMulti)
 
     const vector<real> radBorders = {1e-6, 2e-6, 3e-6};
 
-    sim.setGrid(std::make_unique<CartesianGrid>(-1, 1, 3, radBorders));
-    sim.setLauncher(std::make_unique<PointLauncher>(SKIRT_DIR "multi/in/sed.txt"));
-    sim.setScatterer(std::make_unique<IsotropicScatterer>());
+    sim.setGrid<CartesianGrid>(-1, 1, 3, radBorders);
+    sim.addLauncher<PointLauncher>(0., 0., 0.);
+    sim.addLauncher<IsotropicLauncher>();
+    sim.addLauncher<SEDLauncher>(SKIRT_DIR "multi/in/sed.txt");
+    sim.setScatterer<IsotropicScatterer>();
 
     auto& grid = sim.grid();
     Math::fill(grid.kappa(), 2.);

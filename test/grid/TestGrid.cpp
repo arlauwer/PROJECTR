@@ -27,7 +27,7 @@ TEST(CartesianGrid, AccumulateRadiationField)
     batch->ny[0]         = 0;
     batch->nz[0]         = 0;
 
-    cart.initialize(*batch);
+    cart.launch(*batch);
     cart.propagate(*batch);
 
     auto& rad = cart.radiationField();
@@ -90,7 +90,7 @@ TEST(CartesianGrid, ScatterDirection)
     batch->nz[4] = 1;  // +z
     batch->nz[5] = -1; // -z
 
-    cart.initialize(*batch);
+    cart.launch(*batch);
     cart.propagate(*batch);
 
     // all should be at 0.5 along their axis

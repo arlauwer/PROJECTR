@@ -1,4 +1,4 @@
-#include "TestScatterer.hpp"
+#include "IsotropicLauncher.hpp"
 #include "util/Random.hpp"
 
 void IsotropicLauncher::launch(Batch& batch)

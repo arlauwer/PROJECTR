@@ -1,5 +1,5 @@
 #include "IsotropicScatterer.hpp"
-#include "Random.hpp"
+#include "util/Random.hpp"
 
 void IsotropicScatterer::launch(Batch& batch)
 {

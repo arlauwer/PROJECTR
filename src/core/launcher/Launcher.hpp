@@ -1,6 +1,6 @@
 #pragma once
 
-#include "SED.hpp"
+#include "core/batch/Bitmask.hpp"
 #include "core/batch/Batch.hpp"
 
 class Launcher
